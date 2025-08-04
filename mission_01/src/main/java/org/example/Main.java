@@ -23,11 +23,13 @@ public class Main {
 
                 // WiseSaying 인스턴스 객체 생성
                 WiseSaying ws = new WiseSaying(num, saying, author);
+
                 // sayinglist에 생성한 객체 저장
                 sayinglist.add(ws);
 
-                System.out.println("%d번 명언이 등록되었습니다.".formatted((num)));
                 num++;
+
+                System.out.println("%d번 명언이 등록되었습니다.".formatted((ws.id)));
             } else if (command.equals("수정")) {
                 System.out.print("id=");
                 int chgnum = sc.nextInt();
@@ -46,11 +48,10 @@ public class Main {
                         System.out.print("작가 : ");
                         String author = sc.nextLine();
 
-                        // 기존에 있던 객체 삭제
-                        sayinglist.remove(i);
-                        // 새로 변경할 속담을 담은 객체를 저장
-                        WiseSaying ws = new WiseSaying(chgnum, saying, author);
-                        sayinglist.add(ws);
+                        // 새로 변경할 속담으로 덮어쓰기
+                        WiseSaying ws = sayinglist.get(i);
+                        ws.saying = saying;
+                        ws.author = author;
 
                         found = true;
                         break;
@@ -68,7 +69,7 @@ public class Main {
                 boolean found = false;
 
                 for(int i = 0; i < sayinglist.size(); i++) {
-                    // 변경할 파일의 번호와 동일한 번호가 있다면
+                    // 삭제할 파일의 번호와 동일한 번호가 있다면
                     if(sayinglist.get(i).id == delnum) {
                         sayinglist.remove(i);
                         System.out.println(delnum + "번 명언이 삭제되었습니다.");
@@ -77,7 +78,7 @@ public class Main {
                     }
                 }
 
-                // 변경할 파일의 번호와 동일한 번호가 없다면
+                // 삭제할 파일의 번호와 동일한 번호가 없다면
                 if (!found) {
                     System.out.println(delnum + "번 명언은 존재하지 않습니다.");
                 }
@@ -93,17 +94,5 @@ public class Main {
                 System.out.println("잘못된 명령입니다.");
             }
         }
-    }
-}
-
-class WiseSaying {
-    int id;
-    String saying;
-    String author;
-
-    public WiseSaying(int id, String saying, String author){
-        this.id = id;
-        this.saying = saying;
-        this.author = author;
     }
 }
