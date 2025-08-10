@@ -1,9 +1,6 @@
 package com.back;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Scanner;
-import java.util.stream.IntStream;
+import java.util.*;
 
 public class App {
 
@@ -11,6 +8,7 @@ public class App {
     private int lastId = 0;
     // List == ArrayList, LinkeList... etc
     private List<WiseSaying> wiseSayings = new ArrayList<>();
+    Map<String, String> paramMap = new HashMap<>();
 
     public void run() {
 
@@ -27,29 +25,54 @@ public class App {
                 actionList();
 
             } else if (command.startsWith("삭제")) {
-                actionDelete(command);
-
+                setParams(command);
+                actionDelete();
             } else if (command.startsWith("수정")) {
-                actionModify(command);
-
+                setParams(command);
+                actionModify();
             } else if (command.equals("종료")) {
                 break;
             }
         }
     }
 
-    private void actionModify(String command) {
+    private void setParams(String command) {
+        String[] commandBits = command.split("\\?");
 
-        String[] commandBits = command.split("=");
+        String actionName = commandBits[0];
+        String queryString = "";
 
-        if (commandBits.length < 2) {
-            System.out.println("번호를 입력해주세요.");
-            return;
+        if (commandBits.length > 1){
+            queryString = commandBits[1];
         }
 
-        String idStr = commandBits[1];
-        int id = Integer.parseInt(idStr);
+        String[] queryStringBits = queryString.split("&");
 
+        for(String param : queryStringBits) {
+            String[] paramBits = param.split("=");
+            String key = paramBits[0];
+            String value = null;
+
+            if(paramBits.length > 1) {
+                value = paramBits[1];
+            }
+
+            if(value == null) {
+                continue;
+            }
+
+            paramMap.put(key, value);
+        }
+    }
+
+    private String getParam(String key) {
+        return paramMap.get(key);
+    }
+
+    private void actionModify() {
+
+        String strId = getParam("id");
+        int id = Integer.parseInt(strId);
         WiseSaying wiseSaying = findByIdOrNull(id);
 
         if(wiseSaying == null) {
@@ -72,16 +95,9 @@ public class App {
         wiseSaying.setAuthor(newAuthor);
     }
 
-    private void actionDelete(String command) {
+    private void actionDelete() {
 
-        String[] commandBits = command.split("=");
-
-        if (commandBits.length < 2) {
-            System.out.println("번호를 입력해주세요.");
-            return;
-        }
-
-        String idStr = commandBits[1];
+        String idStr = getParam("id");
         int id = Integer.parseInt(idStr);
 
         boolean result = delete(id);
@@ -98,14 +114,6 @@ public class App {
                 .filter(w -> w.getId() == id)
                 .findFirst()
                 .orElse(null);
-    }
-
-    private int findIndexById(int id) {
-        return IntStream.range(0, wiseSayings.size())
-                .filter(i -> wiseSayings.get(i).getId() == id)
-                .findFirst()
-                .orElse(-1);
-
     }
 
     private boolean delete(int id) {
@@ -142,7 +150,6 @@ public class App {
 
         lastId++;
         WiseSaying wiseSaying = new WiseSaying(lastId, saying, author);
-
         wiseSayings.add(wiseSaying);
 
         return wiseSaying;
