@@ -1,13 +1,15 @@
 package com.back;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
 
 public class App {
 
     private Scanner sc = new Scanner(System.in);
-    private int lastNo = 0;
-    private WiseSaying[] wiseSayings = new WiseSaying[100];
-    private int lastIndex = 0;
+    private int lastId = 0;
+    // List == ArrayList, LinkeList... etc
+    private List<WiseSaying> wiseSayings = new ArrayList<>();
 
     public void run() {
 
@@ -54,7 +56,7 @@ public class App {
             return;
         }
 
-        WiseSaying modifyTargetWiseSaying = wiseSayings[modifyTargetIndex];
+        WiseSaying modifyTargetWiseSaying = wiseSayings.get(modifyTargetIndex);
 
         System.out.println("명언(기존) : %s".formatted(modifyTargetWiseSaying.getSaying()));
         System.out.print("명언 : ");
@@ -93,8 +95,8 @@ public class App {
     }
 
     private int findIndexById(int id) {
-        for (int i = 0; i < lastIndex; i++) {
-            if (wiseSayings[i].getId() == id) {
+        for (int i = 0; i < wiseSayings.size(); i++) {
+            if (wiseSayings.get(i).getId() == id) {
                 return i;
             }
         }
@@ -110,11 +112,7 @@ public class App {
             return false;
         }
 
-        for (int i = deleteTargetIndex; i < lastIndex; i++) {
-            wiseSayings[i] = wiseSayings[i + 1];
-        }
-
-        lastIndex--;
+        wiseSayings.remove(deleteTargetIndex);
 
         return true;
     }
@@ -123,24 +121,15 @@ public class App {
         System.out.println("번호 / 작가 / 명언");
         System.out.println("----------------------");
 
-        WiseSaying[] wiseSayings = findListDesc();
+        List<WiseSaying> wiseSayings = findListDesc();
 
         for (WiseSaying wiseSaying : wiseSayings) {
             System.out.println("%d / %s / %s".formatted(wiseSaying.getId(), wiseSaying.getSaying(), wiseSaying.getAuthor()));
         }
     }
 
-    private WiseSaying[] findListDesc() {
-
-        WiseSaying[] resultList = new WiseSaying[lastIndex];
-        int resultListIndex = 0;
-
-        for (int i = lastIndex - 1; i >= 0; i--) {
-            resultList[resultListIndex] = wiseSayings[i];
-            resultListIndex++;
-        }
-
-        return resultList;
+    private List<WiseSaying> findListDesc() {
+        return wiseSayings.reversed();
     }
 
     private void actionWrite() {
@@ -156,10 +145,10 @@ public class App {
 
     private WiseSaying write(String saying, String author) {
 
-        lastNo++;
-        WiseSaying wiseSaying = new WiseSaying(lastNo, saying, author);
+        lastId++;
+        WiseSaying wiseSaying = new WiseSaying(lastId, saying, author);
 
-        wiseSayings[lastIndex++] = wiseSaying;
+        wiseSayings.add(wiseSaying);
 
         return wiseSaying;
     }
