@@ -1,8 +1,10 @@
+import java.io.ByteArrayOutputStream;
+import java.io.PrintStream;
 import java.util.Scanner;
 
 public class Main {
     public static void main(String[] args) {
-        experiment1();
+        experiment2();
     }
 
     public static void experiment1() {
@@ -16,5 +18,27 @@ public class Main {
         String saying = sc.nextLine();
         System.out.println("입력할 명령어: " + cmd);
         System.out.println("입력할 명언: " + saying);
+    }
+
+    public static void experiment2() {
+        System.out.println("안녕하세요.");
+        PrintStream originalOut = System.out;
+
+        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+        PrintStream printStream = new PrintStream(outputStream);
+
+        System.setOut(printStream);
+        System.out.println("하하하");
+
+        String outStr = outputStream.toString();
+        System.setOut(originalOut);
+        printStream.close();
+
+        System.out.println(outStr);
+        if(outStr.trim().equals("하하하")){
+            System.out.println("출력 결과가 일치합니다.");
+        } else {
+            System.out.println("출력 결과가 일치하지 않습니다.");
+        }
     }
 }
