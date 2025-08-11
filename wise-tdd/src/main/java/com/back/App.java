@@ -1,50 +1,33 @@
 package com.back;
 
-import java.util.ArrayList;
-import java.util.List;
+import com.back.domain.wiseSaying.controller.WiseSayingController;
+import com.back.system.SystemController;
+
 import java.util.Scanner;
 
 public class App {
     private Scanner sc;
+    private WiseSayingController wiseSayingController;
+    private SystemController systemController;
 
-    public App(Scanner sc){
+    public App(Scanner sc) {
         this.sc = sc;
+        wiseSayingController = new WiseSayingController(sc);
+        systemController = new SystemController();
     }
 
     public void run() {
         System.out.println("== 명언 앱 ==");
-        int lastId = 0;
-        List<WiseSaying> wiseSayings = new ArrayList<>();
 
-        while(true) {
+        while (true) {
             System.out.print("명령) ");
             String cmd = sc.nextLine();
 
             switch (cmd) {
-                case "등록" -> {
-                    System.out.print("명언 : ");
-                    String saying = sc.nextLine();
-                    System.out.print("작가 : ");
-                    String author = sc.nextLine();
-
-                    lastId++;
-
-                    WiseSaying wiseSaying = new WiseSaying(lastId, saying, author);
-                    wiseSayings.add(wiseSaying);
-                    System.out.println("%d번 명언이 등록되었습니다.".formatted(lastId));
-                }
-                case "목록" -> {
-                    System.out.print("번호 / 작가 / 명언");
-                    System.out.print("------------------");
-
-                    wiseSayings
-                            .reversed()
-                            .stream()
-                            .forEach(wiseSaying -> System.out.printf("%d / %s / %s%n",
-                                    wiseSaying.getId(), wiseSaying.getAuthor(), wiseSaying.getSaying()));
-
-                }
+                case "등록" -> wiseSayingController.actionAdd();
+                case "목록" -> wiseSayingController.actionList();
                 case "종료" -> {
+                    systemController.actionExit();
                     return;
                 }
             }
