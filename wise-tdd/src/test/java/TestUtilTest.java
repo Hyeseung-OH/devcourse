@@ -9,7 +9,7 @@ public class TestUtilTest {
     @Test
     @DisplayName("TestUtil.genScanner()")
     void t1() {
-        Scanner sc = TestUtil.getScanner("""
+        Scanner sc = TestUtil.genScanner("""
                         등록
                         너 자신을 알라
                         소크라테스
