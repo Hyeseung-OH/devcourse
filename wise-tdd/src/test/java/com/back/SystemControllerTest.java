@@ -5,11 +5,11 @@ import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class AppTest {
+public class SystemControllerTest {
     @Test
-    @DisplayName("=== 명언 앱 === 출력")
+    @DisplayName("종료")
     void t1() {
         String out = AppTestRunner.run("종료");
-        assertThat(out).contains("== 명언 앱 ==");
+        assertThat(out).contains("프로그램을 종료합니다.");
     }
 }
