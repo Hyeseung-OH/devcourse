@@ -6,7 +6,6 @@ public class App {
 
     private Scanner sc = new Scanner(System.in);
     private int lastId = 0;
-    // List == ArrayList, LinkeList... etc
     private List<WiseSaying> wiseSayings = new ArrayList<>();
     Map<String, String> paramMap = new HashMap<>();
 
@@ -27,9 +26,11 @@ public class App {
             } else if (command.startsWith("삭제")) {
                 setParams(command);
                 actionDelete();
+
             } else if (command.startsWith("수정")) {
                 setParams(command);
                 actionModify();
+
             } else if (command.equals("종료")) {
                 break;
             }
@@ -37,27 +38,28 @@ public class App {
     }
 
     private void setParams(String command) {
+
         String[] commandBits = command.split("\\?");
 
         String actionName = commandBits[0];
         String queryString = "";
 
-        if (commandBits.length > 1){
+        if (commandBits.length > 1) {
             queryString = commandBits[1];
         }
 
         String[] queryStringBits = queryString.split("&");
 
-        for(String param : queryStringBits) {
+        for (String param : queryStringBits) {
             String[] paramBits = param.split("=");
             String key = paramBits[0];
             String value = null;
 
-            if(paramBits.length > 1) {
+            if (paramBits.length > 1) {
                 value = paramBits[1];
             }
 
-            if(value == null) {
+            if (value == null) {
                 continue;
             }
 
