@@ -1,3 +1,5 @@
+import com.back.App;
+
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
 import java.util.Scanner;
@@ -5,7 +7,9 @@ import java.util.Scanner;
 public class Main {
     public static void main(String[] args) {
         //experiment1();
-        experiment2();
+        //experiment2();
+
+        new App(new Scanner(System.in)).run();
     }
 
     public static void experiment1() {

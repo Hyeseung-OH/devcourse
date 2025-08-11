@@ -21,7 +21,6 @@ public class AppTest {
                         등록
                         현재를 사랑하라.
                         작자미상
-                        종료
                         """
         );
         assertThat(out).contains("명령) ");
