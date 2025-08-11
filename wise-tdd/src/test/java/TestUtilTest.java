@@ -1,13 +1,15 @@
-import java.util.Scanner;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+
+import java.util.Scanner;
+
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class TestUtilTest {
     @Test
     @DisplayName("TestUtil.genScanner()")
     void t1() {
-        Scanner sc = TestUtil.getSacnner("""
+        Scanner sc = TestUtil.getScanner("""
                         등록
                         너 자신을 알라
                         소크라테스
