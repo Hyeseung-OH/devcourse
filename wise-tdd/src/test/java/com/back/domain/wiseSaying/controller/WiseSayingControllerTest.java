@@ -1,5 +1,6 @@
-package com.back;
+package com.back.domain.wiseSaying.controller;
 
+import com.back.AppTestRunner;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 

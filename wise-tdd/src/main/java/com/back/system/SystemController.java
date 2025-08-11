@@ -1,4 +1,4 @@
-package com.back;
+package com.back.system;
 
 public class SystemController {
     public void actionExit() {
