@@ -246,4 +246,35 @@ public class WiseSayingControllerTest {
                 .doesNotContain("2 / 작가 2 / 명언 2")
                 .doesNotContain("1 / 작가 1 / 명언 1");
     }
+
+    @Test
+    @DisplayName("목록?page=2")
+    void t13() {
+        // 샘플 데이터
+        String input = IntStream.rangeClosed(1, 10)
+                .mapToObj(num -> """
+                        등록
+                        명언 %d
+                        작가 %d
+                        """.formatted(num, num))
+                .collect(Collectors.joining("\n"));
+
+        input += "목록?page=2\n";
+
+        String out = AppTestRunner.run(input);
+
+        System.out.println(out);
+
+        assertThat(out)
+                .doesNotContain("10 / 작가 10 / 명언 10")
+                .doesNotContain("9 / 작가 9 / 명언 9")
+                .doesNotContain("8 / 작가 8 / 명언 8")
+                .doesNotContain("7 / 작가 7 / 명언 7")
+                .doesNotContain("6 / 작가 6 / 명언 6")
+                .contains("5 / 작가 5 / 명언 5")
+                .contains("4 / 작가 4 / 명언 4")
+                .contains("3 / 작가 3 / 명언 3")
+                .contains("2 / 작가 2 / 명언 2")
+                .contains("1 / 작가 1 / 명언 1");
+    }
 }
