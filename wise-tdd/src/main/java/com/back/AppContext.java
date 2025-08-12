@@ -20,10 +20,10 @@ public class AppContext {
     }
     public static void init() {
         Scanner sc = new Scanner(System.in);
-        systemController = new SystemController();
-        wiseSayingController = new WiseSayingController();
-        wiseSayingService = new WiseSayingService();
-        wiseSayingRepository = new WiseSayingRepository();
+        AppContext.wiseSayingRepository = new WiseSayingRepository();
+        AppContext.wiseSayingService = new WiseSayingService();
+        AppContext.systemController = new SystemController();
+        AppContext.wiseSayingController = new WiseSayingController();
     }
 
 }
