@@ -4,6 +4,9 @@ import com.back.AppTestRunner;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
+
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class WiseSayingControllerTest {
@@ -194,7 +197,7 @@ public class WiseSayingControllerTest {
     }
 
     @Test
-    @DisplayName("목록?keyword=이순신")
+    @DisplayName("목록?keyword=작자")
     void t11() {
         String out = AppTestRunner.run("""
                 등록
@@ -211,5 +214,36 @@ public class WiseSayingControllerTest {
         assertThat(out)
                 .contains("1 / 작자미상 / 현재를 사랑하라.")
                 .doesNotContain("2 / 소크라테스 / 너 자신을 알라.");
+    }
+
+    @Test
+    @DisplayName("목록: 웹 페이지에 최신 명언 5개 출력")
+    void t12() {
+        // 샘플 데이터
+        String input = IntStream.rangeClosed(1, 10)
+                .mapToObj(num -> """
+                        등록
+                        명언 %d
+                        작가 %d
+                        """.formatted(num, num))
+                .collect(Collectors.joining("\n"));
+
+        input += "목록\n";
+
+        String out = AppTestRunner.run(input);
+
+        System.out.println(out);
+
+        assertThat(out)
+                .contains("10 / 작가 10 / 명언 10")
+                .contains("9 / 작가 9 / 명언 9")
+                .contains("8 / 작가 8 / 명언 8")
+                .contains("7 / 작가 7 / 명언 7")
+                .contains("6 / 작가 6 / 명언 6")
+                .doesNotContain("5 / 작가 5 / 명언 5")
+                .doesNotContain("4 / 작가 4 / 명언 4")
+                .doesNotContain("3 / 작가 3 / 명언 3")
+                .doesNotContain("2 / 작가 2 / 명언 2")
+                .doesNotContain("1 / 작가 1 / 명언 1");
     }
 }
