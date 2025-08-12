@@ -52,7 +52,7 @@ public class WiseSayingControllerTest {
     }
 
     @Test
-    @DisplayName("등록 시 번호 노출")
+    @DisplayName("목록")
     void t4() {
         String out = AppTestRunner.run(
                 """

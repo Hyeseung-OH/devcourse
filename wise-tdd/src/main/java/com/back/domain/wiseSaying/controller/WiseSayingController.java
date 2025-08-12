@@ -63,6 +63,7 @@ public class WiseSayingController {
 
         if(wiseSaying == null){
             System.out.println("%d번 명언은 존재하지 않습니다.".formatted(id));
+            return;
         }
 
         System.out.println("명언(기존) : %s".formatted(wiseSaying.getSaying()));
