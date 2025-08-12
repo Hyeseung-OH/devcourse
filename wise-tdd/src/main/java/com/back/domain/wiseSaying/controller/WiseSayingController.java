@@ -32,10 +32,13 @@ public class WiseSayingController {
         String kwdType = rq.getParam("keywordType", "");
         String kw = rq.getParam("keyword", "");
 
+        int pageSize = 5;
+        int pageNo = 1;
+
         System.out.println("번호 / 작가 / 명언");
         System.out.println("----------------------");
 
-        List<WiseSaying> wiseSayings = wiseSayingService.findListDesc(kw, kwdType);
+        List<WiseSaying> wiseSayings = wiseSayingService.findListDesc(kw, kwdType, pageSize, pageNo);
 
         wiseSayings
                 .stream()
