@@ -30,4 +30,8 @@ public class WiseSayingService {
     public boolean delete(int id) {
         return wiseSayingRepository.delete(id);
     }
+
+    public WiseSaying findByIdOrNull(int id) {
+        return wiseSayingRepository.findByIdOrNull(id);
+    }
 }
