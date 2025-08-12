@@ -23,4 +23,8 @@ public class WiseSayingRepository {
     public List<WiseSaying> findListDesc() {
         return wiseSayings.reversed();
     }
+
+    public boolean delete(int id) {
+        return wiseSayings.removeIf(wiseSaying -> wiseSaying.getId() == id);
+    }
 }

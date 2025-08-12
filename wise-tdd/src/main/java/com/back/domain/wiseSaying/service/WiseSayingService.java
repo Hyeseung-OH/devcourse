@@ -27,4 +27,7 @@ public class WiseSayingService {
     }
 
 
+    public boolean delete(int id) {
+        return wiseSayingRepository.delete(id);
+    }
 }
