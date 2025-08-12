@@ -154,7 +154,7 @@ public class WiseSayingControllerTest {
     }
 
     @Test
-    @DisplayName("목록?keywordType=content&keyword=과거")
+    @DisplayName("목록?keyword=과거")
     void t9() {
         String out = AppTestRunner.run("""
                 등록
@@ -163,7 +163,7 @@ public class WiseSayingControllerTest {
                 등록
                 과거에 집착하지 마라.
                 작자미상
-                목록?keywordType=content&keyword=과거
+                목록?keyword=과거
                 """);
 
         System.out.println(out);

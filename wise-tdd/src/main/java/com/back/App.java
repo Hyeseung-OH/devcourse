@@ -28,7 +28,7 @@ public class App {
 
             switch (action) {
                 case "등록" -> wiseSayingController.actionAdd();
-                case "목록" -> wiseSayingController.actionList();
+                case "목록" -> wiseSayingController.actionList(rq);
                 case "삭제" -> wiseSayingController.actionDelete(rq);
                 case "수정" -> wiseSayingController.actionModify(rq);
                 case "종료" -> {
