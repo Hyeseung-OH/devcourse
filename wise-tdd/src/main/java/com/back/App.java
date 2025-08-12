@@ -12,7 +12,7 @@ public class App {
 
     public App(Scanner sc) {
         this.sc = sc;
-        wiseSayingController = new WiseSayingController(sc);
+        wiseSayingController = new WiseSayingController();
         systemController = new SystemController();
     }
 
