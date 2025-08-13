@@ -14,4 +14,11 @@ public class PageDto {
     private int pageSize; // 페이지당 아이템 수
     private int totalItems; // 전체 아이템 수
     private List<WiseSaying> content; // 실제 데이터
+
+    public int getTotalPageCnt() {
+        if(totalItems == 0) {
+            return 0;
+        }
+        return (int) Math.ceil((double) totalItems / pageSize);
+    }
 }
