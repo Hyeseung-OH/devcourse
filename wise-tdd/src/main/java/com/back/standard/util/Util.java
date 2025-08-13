@@ -60,6 +60,21 @@ public class Util {
             }
         }
 
+
+        public static int getAsInt(String filePath, int defaultValue) {
+
+            String rst = get(filePath, "");
+
+            if(rst.isEmpty()) return defaultValue;
+
+            try {
+                return Integer.parseInt(rst);
+            } catch (NumberFormatException e) {
+                return defaultValue;
+            }
+
+        }
+
         public static boolean rmdir(String dirPath) {
             return delete(dirPath);
         }
@@ -71,6 +86,7 @@ public class Util {
                 throw new RuntimeException("디렉토리 생성 실패: " + dirPath, e);
             }
         }
+
 
         private static class FileDeleteVisitor extends SimpleFileVisitor<Path> {
             @Override

@@ -23,7 +23,7 @@ public class WiseSaying {
     }
 
     public WiseSaying(Map<String, Object> map) {
-        this.id = (Integer) map.get("id");
+        this.id = (int) map.get("id");
         this.saying = (String) map.get("saying");
         this.author = (String) map.get("author");
     }
