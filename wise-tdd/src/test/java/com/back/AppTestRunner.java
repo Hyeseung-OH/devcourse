@@ -11,7 +11,7 @@ public class AppTestRunner {
         ByteArrayOutputStream outputStream = TestUtil.setOutToByteArray();
 
         AppContext.init(sc);
-        new App(sc).run();
+        new App().run();
         return outputStream.toString();
     }
 }
