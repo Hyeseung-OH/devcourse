@@ -1,5 +1,6 @@
 package com.back.domain.wiseSaying.repository;
 
+import com.back.AppConfig;
 import com.back.PageDto;
 import com.back.domain.wiseSaying.entity.WiseSaying;
 import com.back.standard.util.Util;
@@ -10,7 +11,7 @@ import java.util.Map;
 import java.util.Optional;
 
 public class WiseSayingFileRepository implements WiseSayingRepository {
-    private static String dbPath = "db/wiseSaying";
+    private static String dbPath = AppConfig.getMode() + "/db/wiseSaying";
 
     public static void clear() {
         Util.file.delete(dbPath);

@@ -1,12 +1,10 @@
 package com.back.domain.wiseSaying.repository;
 
+import com.back.AppConfig;
 import com.back.AppContext;
 import com.back.PageDto;
 import com.back.domain.wiseSaying.entity.WiseSaying;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 
 import java.util.List;
 
@@ -18,6 +16,12 @@ public class WiseSayingFileRepositoryTest {
     public WiseSayingFileRepositoryTest() {
         AppContext.init();
         wiseSayingFileRepository = AppContext.wiseSayingFileRepository;
+    }
+
+    @BeforeAll
+    static void beforeAll() {
+        AppConfig.setTestMode();
+        AppContext.init();
     }
 
     @BeforeEach
