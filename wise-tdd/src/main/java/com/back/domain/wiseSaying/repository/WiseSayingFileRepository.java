@@ -21,17 +21,17 @@ public class WiseSayingFileRepository {
         return dbPath + "/lastId.txt";
     }
 
-    public void save(WiseSaying wiseSaying) {
+    public WiseSaying save(WiseSaying wiseSaying) {
 
         if(wiseSaying.isNew()) {
-
             incrementLastId();
             int lastId = getLastId();
             wiseSaying.setId(lastId);
-            String jsonStr = Util.json.toString(wiseSaying.toMap());
-            Util.file.set(getFilePath(wiseSaying.getId()), jsonStr);
         }
 
+        String jsonStr = Util.json.toString(wiseSaying.toMap());
+        Util.file.set(getFilePath(wiseSaying.getId()), jsonStr);
+        return wiseSaying;
     }
 
     private void incrementLastId() {
