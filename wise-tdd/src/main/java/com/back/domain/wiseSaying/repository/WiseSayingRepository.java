@@ -20,7 +20,38 @@ public class WiseSayingRepository {
         return wiseSaying;
     }
 
-    public List<WiseSaying> findListDesc() {
-        return wiseSayings.reversed();
+    public boolean delete(int id) {
+        return wiseSayings.removeIf(wiseSaying -> wiseSaying.getId() == id);
+    }
+
+    public WiseSaying findByIdOrNull(int id) {
+        return wiseSayings.stream()
+                .filter(wiseSaying -> wiseSaying.getId() == id)
+                .findFirst()
+                .orElse(null);
+    }
+
+    public List<WiseSaying> findByContentContainingDesc(String kw, int pageSize, int pageNo) {
+        return wiseSayings.reversed().stream()
+                .filter(w -> w.getSaying().contains(kw))
+                .skip((pageNo-1) * pageSize)
+                .limit(pageSize)
+                .toList();
+    }
+
+    public List<WiseSaying> findByAuthorContainingDesc(String kw, int pageSize, int pageNo) {
+        return wiseSayings.reversed().stream()
+                .filter(w -> w.getAuthor().contains(kw))
+                .skip((pageNo-1) * pageSize)
+                .limit(pageSize)
+                .toList();
+    }
+
+    public List<WiseSaying> findByContentContainingOrAuthorContainingDesc(String kw, int pageSize, int pageNo) {
+        return wiseSayings.reversed().stream()
+                .filter(w -> w.getAuthor().contains(kw) || w.getSaying().contains(kw))
+                .skip((pageNo-1) * pageSize)
+                .limit(pageSize)
+                .toList();
     }
 }

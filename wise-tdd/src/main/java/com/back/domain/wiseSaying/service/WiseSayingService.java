@@ -1,5 +1,6 @@
 package com.back.domain.wiseSaying.service;
 
+import com.back.AppContext;
 import com.back.domain.wiseSaying.entity.WiseSaying;
 import com.back.domain.wiseSaying.repository.WiseSayingRepository;
 
@@ -10,7 +11,7 @@ public class WiseSayingService {
     private WiseSayingRepository wiseSayingRepository;
 
     public WiseSayingService() {
-        this.wiseSayingRepository = new WiseSayingRepository();
+        this.wiseSayingRepository = AppContext.wiseSayingRepository;
     }
 
     // 용어 선정이 중요함
@@ -21,9 +22,27 @@ public class WiseSayingService {
         return wiseSaying;
     }
 
-    public List<WiseSaying> findListDesc() {
-        return wiseSayingRepository.findListDesc();
+    public List<WiseSaying> findListDesc(String kw, String kwdType, int pageSize, int pageNo) {
+        return switch(kwdType) {
+            case "content" -> wiseSayingRepository.findByContentContainingDesc(kw, pageSize, pageNo);
+            case "author" -> wiseSayingRepository.findByAuthorContainingDesc(kw, pageSize, pageNo);
+            default -> wiseSayingRepository.findByContentContainingOrAuthorContainingDesc(kw, pageSize, pageNo);
+        };
     }
 
 
+    public boolean delete(int id) {
+        return wiseSayingRepository.delete(id);
+    }
+
+    public WiseSaying findByIdOrNull(int id) {
+        return wiseSayingRepository.findByIdOrNull(id);
+    }
+
+    public void modify(WiseSaying wiseSaying, String newSaying, String newAuthor) {
+        wiseSaying.setSaying(newSaying);
+        wiseSaying.setAuthor(newAuthor);
+
+        wiseSayingRepository.save(wiseSaying);
+    }
 }

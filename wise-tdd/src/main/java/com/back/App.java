@@ -12,7 +12,7 @@ public class App {
 
     public App(Scanner sc) {
         this.sc = sc;
-        wiseSayingController = new WiseSayingController(sc);
+        wiseSayingController = new WiseSayingController();
         systemController = new SystemController();
     }
 
@@ -23,9 +23,14 @@ public class App {
             System.out.print("명령) ");
             String cmd = sc.nextLine();
 
-            switch (cmd) {
+            Rq rq = new Rq(cmd);
+            String action = rq.getActionName();
+
+            switch (action) {
                 case "등록" -> wiseSayingController.actionAdd();
-                case "목록" -> wiseSayingController.actionList();
+                case "목록" -> wiseSayingController.actionList(rq);
+                case "삭제" -> wiseSayingController.actionDelete(rq);
+                case "수정" -> wiseSayingController.actionModify(rq);
                 case "종료" -> {
                     systemController.actionExit();
                     return;
