@@ -72,9 +72,17 @@ public class WiseSayingFileRepository {
     }
 
     public PageDto findByContentContainingDesc(String kw, int pageSize, int pageNo) {
-
         List<WiseSaying> filteredWiseSayings = findAll().stream()
                 .filter(wiseSaying -> wiseSaying.getSaying().contains(kw))
+                .sorted(Comparator.comparing(WiseSaying::getId).reversed())
+                .toList();
+
+        return pageOf(filteredWiseSayings, pageNo, pageSize);
+    }
+
+    public PageDto findByAuthorContainingDesc(String kw, int pageSize, int pageNo) {
+        List<WiseSaying> filteredWiseSayings = findAll().stream()
+                .filter(wiseSaying -> wiseSaying.getAuthor().contains(kw))
                 .sorted(Comparator.comparing(WiseSaying::getId).reversed())
                 .toList();
 
