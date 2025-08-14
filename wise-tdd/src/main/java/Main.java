@@ -1,4 +1,5 @@
 import com.back.App;
+import com.back.AppContext;
 
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
@@ -6,9 +7,11 @@ import java.util.Scanner;
 
 public class Main {
     public static void main(String[] args) {
+        AppContext.init();
+        new App().run();
+
         //experiment1();
         //experiment2();
-        new App(new Scanner(System.in)).run();
     }
 
     public static void experiment1() {
