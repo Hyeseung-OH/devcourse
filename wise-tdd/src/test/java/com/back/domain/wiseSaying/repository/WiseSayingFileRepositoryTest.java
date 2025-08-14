@@ -154,4 +154,29 @@ public class WiseSayingFileRepositoryTest {
                         wiseSaying1
                 );
     }
+
+    @Test
+    @DisplayName("명언 다건 조회 - content, author 필터링")
+    void t8() {
+        WiseSaying wiseSaying1 = new WiseSaying("꿈을 지녀라. 그러면 어려운 현실을 이길 수 있다.", "괴테");
+        wiseSayingFileRepository.save(wiseSaying1);
+
+        WiseSaying wiseSaying2 = new WiseSaying("너 자신을 알라.", "소크라테스");
+        wiseSayingFileRepository.save(wiseSaying2);
+
+        WiseSaying wiseSaying3 = new WiseSaying("꿈은 현실이 된다.", "작자미상");
+        wiseSayingFileRepository.save(wiseSaying3);
+
+        WiseSaying wiseSaying4 = new WiseSaying("잠을 잘 자야 합니다.", "꿈꾸는자");
+        wiseSayingFileRepository.save(wiseSaying4);
+
+        PageDto pageDto = wiseSayingFileRepository.findByContentContainingOrAuthorContainingDesc("꿈", 5, 1);
+
+        assertThat(pageDto.getContent())
+                .containsExactly(
+                        wiseSaying4,
+                        wiseSaying3,
+                        wiseSaying1
+                );
+    }
 }
