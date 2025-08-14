@@ -7,6 +7,8 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
+import java.util.List;
+
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class WiseSayingFileRepositoryTest {
@@ -86,5 +88,27 @@ public class WiseSayingFileRepositoryTest {
                 .isEqualTo("너 자신을 알라");
         assertThat(foundWisewiseSaying1.getAuthor())
                 .isEqualTo("소크라테스");
+    }
+
+    @Test
+    @DisplayName("명언 다건 조회 - 전체 조회")
+    void t5() {
+        WiseSaying wiseSaying1 = new WiseSaying("꿈을 지녀라. 그러면 어려운 현실을 이길 수 있다.", "괴테");
+        wiseSayingFileRepository.save(wiseSaying1);
+
+        WiseSaying wiseSaying2 = new WiseSaying("너 자신을 알라", "괴테");
+        wiseSayingFileRepository.save(wiseSaying2);
+
+        WiseSaying wiseSaying3 = new WiseSaying("나의 죽음을 적에게 알리지 마라.", "이순신");
+        wiseSayingFileRepository.save(wiseSaying3);
+
+        List<WiseSaying> wiseSayings = wiseSayingFileRepository.findAll();
+
+        assertThat(wiseSayings)
+                .containsExactly(
+                        wiseSaying1,
+                        wiseSaying2,
+                        wiseSaying3
+                );
     }
 }
