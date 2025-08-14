@@ -4,6 +4,7 @@ import com.back.domain.wiseSaying.entity.WiseSaying;
 import com.back.standard.util.Util;
 
 import java.util.Map;
+import java.util.Optional;
 
 public class WiseSayingFileRepository {
     private static String dbPath = "db/wiseSaying";
@@ -42,16 +43,16 @@ public class WiseSayingFileRepository {
         return Util.file.getAsInt(getLastIdPath(), 0);
     }
 
-    public WiseSaying findByIdOrNull(int id) {
+    public Optional<WiseSaying> findById(int id) {
         String jsonStr = Util.file.get(getFilePath(id), "");
 
         if(jsonStr.isEmpty()) {
-            return null;
+            return Optional.empty();
         }
 
         Map<String, Object> map = Util.json.toMap(jsonStr);
         WiseSaying wiseSaying = new WiseSaying(map);
 
-        return wiseSaying;
+        return Optional.of(wiseSaying);
     }
 }

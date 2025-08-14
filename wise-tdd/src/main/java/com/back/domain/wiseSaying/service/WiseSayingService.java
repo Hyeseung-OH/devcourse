@@ -5,6 +5,8 @@ import com.back.PageDto;
 import com.back.domain.wiseSaying.entity.WiseSaying;
 import com.back.domain.wiseSaying.repository.WiseSayingRepository;
 
+import java.util.Optional;
+
 public class WiseSayingService {
     // 비즈니스에 관련된 것만
     private WiseSayingRepository wiseSayingRepository;
@@ -34,8 +36,8 @@ public class WiseSayingService {
         return wiseSayingRepository.delete(id);
     }
 
-    public WiseSaying findByIdOrNull(int id) {
-        return wiseSayingRepository.findByIdOrNull(id);
+    public Optional<WiseSaying> findById(int id) {
+        return wiseSayingRepository.findById(id);
     }
 
     public void modify(WiseSaying wiseSaying, String newSaying, String newAuthor) {
