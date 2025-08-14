@@ -4,6 +4,7 @@ import com.back.AppConfig;
 import com.back.AppContext;
 import com.back.PageDto;
 import com.back.domain.wiseSaying.entity.WiseSaying;
+import com.back.standard.util.Util;
 import org.junit.jupiter.api.*;
 
 import java.util.List;
@@ -182,5 +183,25 @@ public class WiseSayingFileRepositoryTest {
                         wiseSaying3,
                         wiseSaying1
                 );
+    }
+
+    @Test
+    @DisplayName("빌드 - data.json 파일이 생성됨")
+    void t9() {
+        WiseSaying wiseSaying1 = new WiseSaying("꿈을 지녀라. 그러면 어려운 현실을 이길 수 있다.", "괴테");
+        wiseSayingFileRepository.save(wiseSaying1);
+
+        WiseSaying wiseSaying2 = new WiseSaying("너 자신을 알라.", "소크라테스");
+        wiseSayingFileRepository.save(wiseSaying2);
+
+        WiseSaying wiseSaying3 = new WiseSaying("꿈은 현실이 된다.", "작자미상");
+        wiseSayingFileRepository.save(wiseSaying3);
+
+        WiseSaying wiseSaying4 = new WiseSaying("잠을 잘 자야 합니다.", "꿈꾸는자");
+        wiseSayingFileRepository.save(wiseSaying4);
+
+        String filePath = wiseSayingFileRepository.build();
+
+        assertThat(Util.file.exists(filePath)).isTrue();
     }
 }
