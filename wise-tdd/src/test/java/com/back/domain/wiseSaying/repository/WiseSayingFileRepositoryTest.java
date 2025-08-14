@@ -53,7 +53,17 @@ public class WiseSayingFileRepositoryTest {
 
         WiseSaying foundedWiseSaying2 = wiseSayingFileRepository.findById(2).get();
         assertThat(foundedWiseSaying2).isEqualTo(wiseSaying2);
+    }
 
+    @Test
+    @DisplayName("명언 삭제")
+    void t3() {
+        WiseSaying wiseSaying1 = new WiseSaying("꿈을 지녀라. 그러면 어려운 현실을 이길 수 있다.", "괴테");
 
+        wiseSayingFileRepository.save(wiseSaying1);
+
+        wiseSayingFileRepository.delete(wiseSaying1);
+        WiseSaying foundedWiseSaying1 = wiseSayingFileRepository.findById(1).orElse(null);
+        assertThat(foundedWiseSaying1).isNull();
     }
 }
