@@ -2,6 +2,7 @@ package com.back;
 
 import com.back.domain.wiseSaying.controller.WiseSayingController;
 import com.back.domain.wiseSaying.repository.WiseSayingFileRepository;
+import com.back.domain.wiseSaying.repository.WiseSayingMemoryRepository;
 import com.back.domain.wiseSaying.repository.WiseSayingRepository;
 import com.back.domain.wiseSaying.service.WiseSayingService;
 import com.back.system.SystemController;
@@ -15,17 +16,19 @@ public class AppContext {
     public static WiseSayingService wiseSayingService;
     public static WiseSayingRepository wiseSayingRepository;
     public static WiseSayingFileRepository wiseSayingFileRepository;
-    public static void init(Scanner _sc) {
+    public static WiseSayingMemoryRepository wiseSayingMemoryRepository;
+
+    public static void init(Scanner _sc, boolean isFileMode) {
         AppContext.sc = _sc;
-        AppContext.wiseSayingRepository = new WiseSayingRepository();
+        AppContext.wiseSayingMemoryRepository = new WiseSayingMemoryRepository();
+        AppContext.wiseSayingFileRepository = new WiseSayingFileRepository();
+        AppContext.wiseSayingRepository = isFileMode ? new WiseSayingFileRepository() : new WiseSayingMemoryRepository();
         AppContext.wiseSayingService = new WiseSayingService();
         AppContext.wiseSayingController = new WiseSayingController();
         AppContext.systemController = new SystemController();
-        AppContext.wiseSayingFileRepository = new WiseSayingFileRepository();
     }
 
     public static void init() {
-        init(new Scanner(System.in));
+        init(new Scanner(System.in), true);
     }
-
 }

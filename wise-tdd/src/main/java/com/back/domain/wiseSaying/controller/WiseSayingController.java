@@ -6,6 +6,7 @@ import com.back.Rq;
 import com.back.domain.wiseSaying.entity.WiseSaying;
 import com.back.domain.wiseSaying.service.WiseSayingService;
 
+import java.util.Optional;
 import java.util.Scanner;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
@@ -76,18 +77,18 @@ public class WiseSayingController {
 
     public void actionModify(Rq rq) {
         int id = rq.getParamAsInt("id", -1);
-        WiseSaying wiseSaying = wiseSayingService.findByIdOrNull(id);
+        Optional<WiseSaying> opWiseSaying = wiseSayingService.findById(id);
 
-        if(wiseSaying == null){
+        if(opWiseSaying.isEmpty()){
             System.out.println("%d번 명언은 존재하지 않습니다.".formatted(id));
             return;
         }
 
-        System.out.println("명언(기존) : %s".formatted(wiseSaying.getSaying()));
+        System.out.println("명언(기존) : %s".formatted(opWiseSaying.get().getSaying()));
         String newSaying = sc.nextLine();
-        System.out.println("작가(기존) : %s".formatted(wiseSaying.getAuthor()));
+        System.out.println("작가(기존) : %s".formatted(opWiseSaying.get().getAuthor()));
         String newAuthor = sc.nextLine();
 
-        wiseSayingService.modify(wiseSaying, newSaying, newAuthor);
+        wiseSayingService.modify(opWiseSaying.get(), newSaying, newAuthor);
     }
 }
