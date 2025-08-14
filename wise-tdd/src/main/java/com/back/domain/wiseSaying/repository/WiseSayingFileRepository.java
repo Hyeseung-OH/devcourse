@@ -1,8 +1,10 @@
 package com.back.domain.wiseSaying.repository;
 
+import com.back.PageDto;
 import com.back.domain.wiseSaying.entity.WiseSaying;
 import com.back.standard.util.Util;
 
+import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -67,5 +69,26 @@ public class WiseSayingFileRepository {
                 .map(Util.json::toMap)
                 .map(WiseSaying::new)
                 .toList();
+    }
+
+    public PageDto findByContentContainingDesc(String kw, int pageSize, int pageNo) {
+
+        List<WiseSaying> filteredWiseSayings = findAll().stream()
+                .filter(wiseSaying -> wiseSaying.getSaying().contains(kw))
+                .sorted(Comparator.comparing(WiseSaying::getId).reversed())
+                .toList();
+
+        return pageOf(filteredWiseSayings, pageNo, pageSize);
+    }
+
+    private PageDto pageOf(List<WiseSaying> filteredContent, int pageNo, int pageSize) {
+
+        List<WiseSaying> content = filteredContent.stream()
+                .skip((pageNo-1) * pageSize)
+                .limit(pageSize)
+                .toList();
+
+        int totalItems = filteredContent.size();
+        return new PageDto(pageNo, pageSize, totalItems, content);
     }
 }
