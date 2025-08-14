@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
-public class WiseSayingFileRepository {
+public class WiseSayingFileRepository implements WiseSayingRepository {
     private static String dbPath = "db/wiseSaying";
 
     public static void clear() {
@@ -25,7 +25,6 @@ public class WiseSayingFileRepository {
     }
 
     public WiseSaying save(WiseSaying wiseSaying) {
-
         if(wiseSaying.isNew()) {
             incrementLastId();
             int lastId = getLastId();
@@ -42,7 +41,6 @@ public class WiseSayingFileRepository {
     }
 
     private int getLastId() {
-
         return Util.file.getAsInt(getLastIdPath(), 0);
     }
 
@@ -72,7 +70,6 @@ public class WiseSayingFileRepository {
     }
 
     private PageDto pageOf(List<WiseSaying> filteredContent, int pageNo, int pageSize) {
-
         List<WiseSaying> content = filteredContent.stream()
                 .skip((pageNo-1) * pageSize)
                 .limit(pageSize)

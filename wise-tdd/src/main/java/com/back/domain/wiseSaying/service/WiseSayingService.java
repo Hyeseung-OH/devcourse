@@ -33,7 +33,14 @@ public class WiseSayingService {
 
 
     public boolean delete(int id) {
-        return wiseSayingRepository.delete(id);
+
+        Optional<WiseSaying> wiseSayingOpt = wiseSayingRepository.findById(id);
+        if (wiseSayingOpt.isEmpty()) {
+            return false;
+        }
+
+        wiseSayingRepository.delete(wiseSayingOpt.get());
+        return true;
     }
 
     public Optional<WiseSaying> findById(int id) {
