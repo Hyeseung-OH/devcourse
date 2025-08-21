@@ -53,6 +53,7 @@ public class BaseInitData {
     }
 
     // 삭제
+    @Transactional
     void work3() {
         Post post1 = postService.getPost(1).get();
         Post post2 = postService.getPost(2).get();
