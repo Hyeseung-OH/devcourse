@@ -2,14 +2,13 @@ package com.back.global.initData;
 
 
 import com.back.domain.post.entity.Post;
-import com.back.domain.post.repository.PostRepository;
 import com.back.domain.post.service.PostService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.ApplicationRunner;
-import org.springframework.boot.autoconfigure.batch.BatchTransactionManager;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
@@ -17,14 +16,21 @@ import java.util.Optional;
 @Configuration
 @RequiredArgsConstructor
 public class BaseInitData {
+    @Autowired
+    @Lazy
+    private BaseInitData self;
     private final PostService postService;
 
     @Bean
     @Transactional
     ApplicationRunner initDataRunner() {
         return args -> {
-            work1();
-            work2();
+            self.work1();
+            self.work2();
+
+            new Thread(() -> {
+                self.work3();
+            }).start();
         };
     }
 
@@ -46,4 +52,14 @@ public class BaseInitData {
         // select * from post where id = 1;
     }
 
+    // 삭제
+    void work3() {
+        Post post1 = postService.getPost(1).get();
+        Post post2 = postService.getPost(2).get();
+
+        postService.delete(post1);
+        if(true)
+            throw new RuntimeException("테스트용 예외 발생");
+        postService.delete(post2);
+    }
 }
