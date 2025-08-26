@@ -1,6 +1,7 @@
 package com.back.domain.post.repository;
 
-import com.back.domain.post.entity.Post;
+import com.back.domain.post.post.entity.Post;
+import com.back.domain.post.post.repository.PostRepository;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,14 +31,14 @@ public class PostRepositoryTest {
     @Test
     @DisplayName("글 생성")
     void t2() {
-        Post newPost = new Post("제목3", "내용3");
+        Post newPost = new Post("new 제목", "new 내용", null);
         assertThat(newPost.getId()).isNull();
 
         Post savedPost = postRepository.save(newPost);
 
         assertThat(savedPost.getId()).isNotNull();
-        assertThat(savedPost.getTitle()).isEqualTo("제목3");
-        assertThat(savedPost.getContent()).isEqualTo("내용3");
+        assertThat(savedPost.getTitle()).isEqualTo("new 제목");
+        assertThat(savedPost.getContent()).isEqualTo("new 내용");
     }
 
     @Test

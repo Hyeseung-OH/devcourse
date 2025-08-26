@@ -1,5 +1,6 @@
-package com.back.domain.post.entity;
+package com.back.domain.post.post.entity;
 
+import com.back.domain.post.member.entity.Member;
 import com.back.global.jpa.entity.BaseEntity;
 import jakarta.persistence.*;
 
@@ -16,8 +17,11 @@ public class Post extends BaseEntity  {
     @Column(columnDefinition = "text")
     private String content;
 
-    public Post(String title, String content) {
+    @ManyToOne
+    private Member author;
+    public Post(String title, String content, Member author) {
         this.title = title;
         this.content = content;
+        this.author = author;
     }
 }
