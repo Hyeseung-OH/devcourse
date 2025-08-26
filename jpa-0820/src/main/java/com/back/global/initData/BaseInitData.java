@@ -28,9 +28,11 @@ public class BaseInitData {
             self.work1();
             self.work2();
 
-            new Thread(() -> {
-                self.work3();
-            }).start();
+//            new Thread(() -> {
+//                self.work3();
+//            }).start();
+
+            work4();
         };
     }
 
@@ -62,5 +64,12 @@ public class BaseInitData {
         if(true)
             throw new RuntimeException("테스트용 예외 발생");
         postService.delete(post2);
+    }
+
+    // 수정
+    @Transactional
+    void work4() {
+        Post post1 = postService.getPost(1).get();
+        postService.modify(post1, "제목1-2", "내용1-2");
     }
 }
