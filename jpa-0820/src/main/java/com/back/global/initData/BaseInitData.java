@@ -22,7 +22,6 @@ public class BaseInitData {
     private final PostService postService;
 
     @Bean
-    @Transactional
     ApplicationRunner initDataRunner() {
         return args -> {
             self.work1();
@@ -32,7 +31,7 @@ public class BaseInitData {
 //                self.work3();
 //            }).start();
 
-            work4();
+            self.work4();
         };
     }
 
@@ -70,6 +69,6 @@ public class BaseInitData {
     @Transactional
     void work4() {
         Post post1 = postService.getPost(1).get();
-        postService.modify(post1, "제목1-2", "내용1-2");
+        postService.modify(post1,"제목1-수정3", "내용1-수정2");
     }
 }
