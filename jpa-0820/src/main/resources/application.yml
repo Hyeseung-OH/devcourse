@@ -4,18 +4,14 @@ server:
 spring:
   application:
     name: demo
+  profiles:
+    active: dev
 
  ## 무료 버전 사용 시 유용
  ## 로그 색상 적용
   output:
     ansi:
       enabled: always
-
-  datasource:
-    url: jdbc:h2:./db_dev;MODE=MySQL
-    username: sa
-    password:
-    driver-class-name: org.h2.Driver
 
   jpa:
     properties:
