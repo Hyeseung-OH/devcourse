@@ -24,6 +24,13 @@ public class Question {
     private LocalDateTime createDate;
 
     // 선택
-    @OneToMany(mappedBy = "question", cascade = CascadeType.REMOVE)
+    @OneToMany(mappedBy = "question", cascade = {CascadeType.REMOVE, CascadeType.PERSIST})
     private List<Answer> answerList;
+
+    public void addAnswer(String s) {
+        Answer answer = new Answer();
+        answer.setContent(s);
+        answer.setQuestion(this);
+        answerList.add(answer);
+    }
 }

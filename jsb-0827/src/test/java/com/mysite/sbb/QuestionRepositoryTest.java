@@ -5,6 +5,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -92,7 +93,7 @@ class QuestionRepositoryTest {
     }
 
     @Test
-    @DisplayName("답변 데이터 생성" )
+    @DisplayName("답변 데이터 생성 - repository 버전" )
     void t8() {
         Question question = this.questionRepository.findById(2).get();
 
@@ -101,5 +102,18 @@ class QuestionRepositoryTest {
         a.setQuestion(question);  // 어떤 질문의 답변인지 알기위해서 Question 객체가 필요하다.
         a.setCreateDate(LocalDateTime.now());
         this.answerRepository.save(a);
+    }
+
+    @Test
+    @DisplayName("답변 데이터 생성 - OneToMany 버전" )
+    @Transactional
+    void t9() {
+        Question question2 = this.questionRepository.findById(2).get();
+
+        int beforeSize = question2.getAnswerList().size();
+        question2.addAnswer("네 자동으로 생성됩니다.");
+
+        int afterSize = question2.getAnswerList().size();
+        assertEquals(beforeSize + 1, afterSize);
     }
 }
