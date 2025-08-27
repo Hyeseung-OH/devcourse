@@ -1,9 +1,29 @@
+server:
+  port: 8070
+
 spring:
   application:
     name: sbb
 
+  output:
+    ansi:
+      enabled: always
+
   profiles:
     active: dev
 
-server:
-  port: 8070
+  jpa:
+    properties:
+      hibernate:
+        format_sql: true
+        highlight_sql: true
+        use_sql_comments: true
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+
+logging:
+  level:
+    org.hibernate.orm.jdbc.bind: TRACE
+    org.hibernate.orm.jdbc.extract: TRACE
+    org.springframework.transaction.interceptor: TRACE
