@@ -23,6 +23,7 @@ public class Question {
 
     private LocalDateTime createDate;
 
-    @OneToMany
+    // 선택
+    @OneToMany(mappedBy = "question", cascade = CascadeType.REMOVE)
     private List<Answer> answerList;
 }
