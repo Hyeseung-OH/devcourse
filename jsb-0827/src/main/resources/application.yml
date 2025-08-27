@@ -1,0 +1,6 @@
+spring:
+  application:
+    name: sbb
+
+server:
+  port: 8070
