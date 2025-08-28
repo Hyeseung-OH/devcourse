@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 @Controller
 @RequiredArgsConstructor
 public class HomeController {
-    private PersonService personService = new PersonService();
+    private final PersonService personService;
 
     @GetMapping("/home")
     @ResponseBody
