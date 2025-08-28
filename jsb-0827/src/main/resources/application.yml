@@ -5,6 +5,10 @@ spring:
   application:
     name: sbb
 
+  thymeleaf:
+    cache: false # 개발할 땐 false, 운영할 땐 true가 좋음
+    prefix: file:src/main/resources/templates/
+
   output:
     ansi:
       enabled: always
