@@ -1,6 +1,9 @@
 package com.back.domain.wiseSaying.controller;
 
+import com.back.AppConfig;
+import com.back.AppContext;
 import com.back.AppTestRunner;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
@@ -10,6 +13,12 @@ import java.util.stream.IntStream;
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class WiseSayingControllerTest {
+    @BeforeAll
+    static void beforeAll() {
+        AppConfig.setTestMode();
+        AppContext.init();
+    }
+    
     @Test
     @DisplayName("등록")
     void t1() {
@@ -340,5 +349,22 @@ public class WiseSayingControllerTest {
                 .doesNotContain("2 / 작가 2 / 명언 2")
                 .doesNotContain("1 / 작가 1 / 명언 1")
                 .contains("페이지 : [1] / 2");
+    }
+
+    @Test
+    @DisplayName("빌드")
+    void t16() {
+        String out = AppTestRunner.run("""
+                등록
+                현재를 사랑하라
+                작자미상
+                등록
+                과거에 집착하지 마라.
+                작자미상
+                빌드
+                """);
+
+        assertThat(out)
+                .contains("data.json 파일의 내용이 갱신되었습니다.");
     }
 }

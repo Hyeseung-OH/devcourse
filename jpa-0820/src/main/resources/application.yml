@@ -1,0 +1,30 @@
+server:
+  port: 8070
+
+spring:
+  application:
+    name: demo
+  profiles:
+    active: dev
+
+ ## 무료 버전 사용 시 유용
+ ## 로그 색상 적용
+  output:
+    ansi:
+      enabled: always
+
+  jpa:
+    properties:
+      hibernate:
+        format_sql: true
+        highlight_sql: true
+        use_sql_comments: true
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+
+  logging:
+    level:
+      org.hibernate.orm.jdbc.bind: TRACE
+      org.hibernate.orm.jdbc.extract: TRACE
+      org.springframework.transaction.interceptor: TRACE
