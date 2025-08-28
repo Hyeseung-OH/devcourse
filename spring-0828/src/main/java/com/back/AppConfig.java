@@ -21,5 +21,4 @@ public class AppConfig {
     public PersonRepository personRepositoryV2() {
         return new PersonRepository(2);
     }
-
 }
