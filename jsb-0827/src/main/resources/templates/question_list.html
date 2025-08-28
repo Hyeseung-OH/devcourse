@@ -5,11 +5,39 @@
     <title>Title</title>
 </head>
 <body>
+
+<!-- 데이터 출력 방법 2가지
+<div>
+    [[${value}]]
+</div>
+
+<div th:text="${value}"></div>  -->
+
+<!-- 리스트 출력 방법, 향상된 for문과 유사
 <ul>
-    <li>질문1</li>
-    <li>질문2</li>
-    <li>질문3</li>
-    <li>질문4</li>
+    <li th:each="num : ${list}" th:text="${num}"></li>
+</ul>  -->
+
+<!-- 리스트로 출력 -->
+<ul>
+    <li th:each="question : ${questionList}" th:text="${question.content}"></li>
 </ul>
+
+<!-- 테이블로 출력 -->
+<table>
+    <thead>
+    <tr>
+        <th>제목</th>
+        <th>작성일시</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="question : ${questionList}">
+        <td th:text="${question.subject}"></td>
+        <td th:text="${question.createDate}"></td>
+    </tr>
+    </tbody>
+</table>
+
 </body>
 </html>
