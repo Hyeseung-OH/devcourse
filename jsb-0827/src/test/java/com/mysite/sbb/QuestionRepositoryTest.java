@@ -4,6 +4,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -107,6 +108,7 @@ class QuestionRepositoryTest {
     @Test
     @DisplayName("답변 데이터 생성 - OneToMany 버전" )
     @Transactional
+    @Rollback(false)
     void t9() {
         Question question2 = this.questionRepository.findById(2).get();
 
@@ -115,5 +117,14 @@ class QuestionRepositoryTest {
 
         int afterSize = question2.getAnswerList().size();
         assertEquals(beforeSize + 1, afterSize);
+    }
+
+    @Test
+    @DisplayName("2번 질문의 답글 조회")
+    void t10() {
+        Question q2 = questionRepository.findById(2).get();
+        Answer answer = q2.getAnswerList().get(0);
+
+        System.out.println("answer = " + answer.getContent());
     }
 }

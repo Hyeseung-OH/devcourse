@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Getter
@@ -24,8 +25,8 @@ public class Question {
     private LocalDateTime createDate;
 
     // 선택
-    @OneToMany(mappedBy = "question", cascade = {CascadeType.REMOVE, CascadeType.PERSIST})
-    private List<Answer> answerList;
+    @OneToMany(mappedBy = "question", fetch = FetchType.EAGER, cascade = {CascadeType.REMOVE, CascadeType.PERSIST})
+    private List<Answer> answerList = new ArrayList<>();
 
     public void addAnswer(String s) {
         Answer answer = new Answer();
