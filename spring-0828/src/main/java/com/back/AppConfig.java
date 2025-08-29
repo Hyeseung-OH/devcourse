@@ -17,8 +17,13 @@ public class AppConfig {
     @Bean
     public ApplicationRunner myApplicationRunner() {
         return args -> {
-            work1();
-            work2();
+            // 트랜잭션이 걸리지 않은 메서드를 호출할 때는 this로 호출해도 된다.
+            this.work1();
+            this.work2();
+
+            // 트랜잭션이 걸린 메서드를 호출할 때는 프록시 객체를 통해서 호출해야 한다.
+            self.work1();
+            self.work2();
         };
     }
 

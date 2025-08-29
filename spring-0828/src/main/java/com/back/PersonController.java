@@ -13,6 +13,7 @@ public class PersonController {
     @GetMapping("/people")
     @ResponseBody
     public String people() {
+        System.out.println("personService 프록시 확인");
         return "사람 수 : %d".formatted(personService.count());
     }
 }
