@@ -2,6 +2,8 @@ package com.back.domain.wiseSaying.controller;
 
 import com.back.domain.wiseSaying.entity.WiseSaying;
 import com.back.domain.wiseSaying.service.WiseSayingService;
+import com.back.standard.MarkdownService;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -15,10 +17,19 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class WiseSayingController {
     private final WiseSayingService wiseSayingService;
+    private final MarkdownService markdownService;
 
     @GetMapping("/wiseSaying/write")
     @ResponseBody
     public String write(String content, String author) {
+        if(content == null || content.trim().length() == 0) {
+            throw new RuntimeException("명언을 입력해주세요.");
+        }
+
+        if(author == null || author.trim().length() == 0) {
+            throw new RuntimeException("작가를 입력해주세요.");
+        }
+
         WiseSaying wiseSaying = wiseSayingService.write(content, author);
         return "%d번 명언이 등록되었습니다.".formatted(wiseSaying.getId());
     }
@@ -41,15 +52,17 @@ public class WiseSayingController {
     @ResponseBody
     public String detail(@PathVariable int id) {
         WiseSaying wiseSaying = wiseSayingService.findById(id);
+        String html = markdownService.toHtml(wiseSaying.getContent());
+
         return """
                 <h1> 번호 : %s </h1>
-                <div> 명언 : %s </div>
                 <div> 작가 : %s </div>
-                """.formatted(wiseSaying.getId(), wiseSaying.getContent(), wiseSaying.getAuthor());
-    }
+                <div>명언 : %s</div>
+                """.formatted(wiseSaying.getId(),  wiseSaying.getAuthor(), html);    }
 
     @GetMapping("/wiseSayings/delete/{id}")
     @ResponseBody
+    @Transactional
     public String delete(@PathVariable int id) {
         WiseSaying wiseSaying = wiseSayingService.findById(id);
         wiseSayingService.delete(wiseSaying);
