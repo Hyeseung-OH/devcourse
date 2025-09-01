@@ -8,7 +8,6 @@ spring:
   output:
     ansi:
       enabled: always
-
   datasource:
     hikari:
       auto-commit: false
@@ -24,7 +23,7 @@ spring:
 
 
 logging:
-    level:
-      org.hibernate.orm.jdbc.bind: TRACE
-      org.hibernate.orm.jdbc.extract: TRACE
-      org.springframework.transaction.interceptor: TRACE
+  level:
+    org.hibernate.orm.jdbc.bind: TRACE
+    org.hibernate.orm.jdbc.extract: TRACE
+    org.springframework.transaction.interceptor: TRACE
