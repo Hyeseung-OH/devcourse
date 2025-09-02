@@ -2,16 +2,17 @@ package com.spring3.domain.post.post.controller;
 
 import com.spring3.domain.post.post.entity.Post;
 import com.spring3.domain.post.post.service.PostService;
+import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
 import org.springframework.stereotype.Controller;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 @Controller
-@Validated
 public class PostController {
     private final PostService postService;
 
@@ -48,11 +49,21 @@ public class PostController {
         return getWriteFormHtml("", "", "", "");
     }
 
+    @AllArgsConstructor
+    @Getter
+    public static class PostWriteForm {
+        @NotBlank
+        @Size(min = 2, max = 10)
+        private String title;
+        @NotBlank
+        @Size(min = 2, max = 100)
+        private String content;
+    }
+
     @PostMapping("/posts/doWrite")
     @ResponseBody
     public String doWrite(
-            @NotBlank @Size(min=2, max=10) String title,
-            @NotBlank @Size(min=2, max=100) String content
+            @Valid PostWriteForm form
     ) {
 //        if(title.isBlank()) return getWriteFormHtml("제목을 입력해주세요.", title, content, "title");
 //        if(title.length() < 2) return getWriteFormHtml("제목을 2자 이상 입력해주세요.", title, content, "title");
@@ -61,7 +72,7 @@ public class PostController {
 //        if(content.length() < 2) return getWriteFormHtml("내용을 2자 이상 입력해주세요.", title, content, "content");
 //        if(content.length() > 1000) return getWriteFormHtml("내용을 1000자 이하로 입력해주세요.", title, content, "content");
 
-        Post post = postService.write(title, content);
+        Post post = postService.write(form.title, form.content);
 
         return "%d번 글이 작성되었습니다.".formatted(post.getId());
     }
