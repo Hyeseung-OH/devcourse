@@ -8,9 +8,13 @@ import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import org.springframework.stereotype.Controller;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
+
+import java.util.stream.Collectors;
 
 @Controller
 public class PostController {
@@ -43,28 +47,55 @@ public class PostController {
                 """.formatted(errorMessage, title, content, errorFieldName);
     }
 
+    @AllArgsConstructor
+    @Getter
+    public static class PostWriteForm {
+        @NotBlank(message = "1-제목을 입력해 주세요.")
+        @Size(min = 2, max = 10, message = "2-제목은 2글자 이상 10글자 이하로 입력해 주세요.")
+        private String title;
+
+        @NotBlank(message = "3-내용을 입력해 주세요.")
+        @Size(min = 2, max = 100, message = "4-내용은 2글자 이상 100글자 이하로 입력해 주세요.")
+        private String content;
+    }
+
+
     @GetMapping("/posts/write")
     @ResponseBody
     public String write() {
         return getWriteFormHtml("", "", "", "");
     }
 
-    @AllArgsConstructor
-    @Getter
-    public static class PostWriteForm {
-        @NotBlank
-        @Size(min = 2, max = 10)
-        private String title;
-        @NotBlank
-        @Size(min = 2, max = 100)
-        private String content;
-    }
-
     @PostMapping("/posts/doWrite")
     @ResponseBody
     public String doWrite(
-            @Valid PostWriteForm form
+            @Valid PostWriteForm form, BindingResult bindingResult
     ) {
+        if(bindingResult.hasErrors()) {
+            String fieldName = "title";
+
+            // 명령형
+//            List<FieldError> fieldErrorsList = bindingResult.getFieldErrors();
+//
+//            StringBuilder sb = new StringBuilder("");
+//
+//            for(FieldError fieldError : fieldErrorsList) {
+//               sb.append(fieldError.getDefaultMessage());
+//                sb.append("<br>");
+//            }
+//
+//            String errorMessages = sb.toString();
+
+            // Stream 이용
+            String errorMessages = bindingResult.getFieldErrors()
+                    .stream()
+                    .map(FieldError::getDefaultMessage)
+                    .sorted()
+                    .collect(Collectors.joining("<br>"));
+
+            return getWriteFormHtml(errorMessages, form.title, form.content, fieldName);
+        }
+
 //        if(title.isBlank()) return getWriteFormHtml("제목을 입력해주세요.", title, content, "title");
 //        if(title.length() < 2) return getWriteFormHtml("제목을 2자 이상 입력해주세요.", title, content, "title");
 //        if(title.length() > 10) return getWriteFormHtml("제목을 10자 이하로 입력해주세요.", title, content, "title");
