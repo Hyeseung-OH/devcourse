@@ -15,7 +15,6 @@ import java.time.LocalDateTime;
 @Getter
 @EntityListeners(AuditingEntityListener.class)
 public abstract class BaseEntity {
-
     @Id
     @GeneratedValue(strategy = jakarta.persistence.GenerationType.IDENTITY)
     private Long id;
@@ -25,5 +24,4 @@ public abstract class BaseEntity {
 
     @LastModifiedDate
     private LocalDateTime modifyDate;
-
 }
