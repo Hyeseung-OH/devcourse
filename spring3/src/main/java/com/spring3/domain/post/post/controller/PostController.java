@@ -11,6 +11,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 
 import java.util.stream.Collectors;
@@ -43,7 +44,7 @@ public class PostController {
 
     @PostMapping("/posts/doWrite")
     public String doWrite(
-            @Valid PostWriteForm form, BindingResult bindingResult, Model model
+            @ModelAttribute("form") @Valid PostWriteForm form, BindingResult bindingResult, Model model
     ) {
         if(bindingResult.hasErrors()) {
             // Stream 이용
