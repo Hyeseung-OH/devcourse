@@ -5,19 +5,32 @@ import com.spring3.domain.post.post.repository.PostRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+import java.util.Optional;
+
 @Service
 @RequiredArgsConstructor
 public class PostService {
-
     private final PostRepository postRepository;
 
-    public void write(String title, String content) {
+    public Post write(String title, String content) {
         Post post = new Post(title, content);
-        postRepository.save(post);
+        return postRepository.save(post);
     }
 
     public long count() {
         return postRepository.count();
     }
 
+    public Optional<Post> findById(long id) {
+        return postRepository.findById(id);
+    }
+
+    public List<Post> findAll() {
+        return postRepository.findAll();
+    }
+
+    public void modify(Post post, String title, String content) {
+        post.update(title, content);
+    }
 }
