@@ -33,4 +33,8 @@ public class PostService {
     public void modify(Post post, String title, String content) {
         post.update(title, content);
     }
+
+    public void writeComment(Post post, String content) {
+        post.addComment(content);
+    }
 }
