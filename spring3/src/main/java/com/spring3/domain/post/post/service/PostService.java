@@ -37,4 +37,8 @@ public class PostService {
     public void writeComment(Post post, String content) {
         post.addComment(content);
     }
+
+    public void delete(Post post, Long commentId) {
+        post.deleteComment(commentId);
+    }
 }

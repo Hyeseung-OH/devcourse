@@ -61,6 +61,11 @@
                 <strong>내용</strong>
                 <p>[[${comment.content}]]</p>
             </div>
+            <div>
+                <a href="#">수정</a>
+                <!-- a 태그는 무조건 get 요청 -->
+                <a th:href="@{/posts/{postId}/comments/{commentId}/delete(postId=${post.id}, commentId=${comment.id})}">삭제</a>
+            </div>
             <hr>
         </div>
     </li>

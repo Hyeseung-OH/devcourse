@@ -10,6 +10,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 
@@ -37,6 +38,18 @@ public class CommentController {
 
         postService.writeComment(post, form.getContent());
         // PostService의 save() 메서드를 호출하지 않아도, 트랜잭션이 커밋될 때 변경 감지(dirty checking)에 의해 자동으로 저장됨
+        return "redirect:/posts/" + postId;
+    }
+
+    @GetMapping("/posts/{postId}/comments/{commentId}/delete")
+    @Transactional
+    public String delete(
+            @PathVariable Long postId,
+            @PathVariable Long commentId
+    ) {
+        Post post = postService.findById(postId).get();
+        postService.delete(post, commentId);
+
         return "redirect:/posts/" + postId;
     }
 }
