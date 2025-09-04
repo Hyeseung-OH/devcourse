@@ -97,6 +97,7 @@ public class PostController {
             return "post/modify";
         }
 
+        // 아래 두 작업을 묶어서 트랜잭션 처리
         Post post = postService.findById(id).get();
         postService.modify(post, form.title, form.content);
 
@@ -105,6 +106,10 @@ public class PostController {
 
 
     @GetMapping("/posts/{id}")
+    // 1. 조회 기능으로 쓰겠다는 의도 명시
+    // 2. JPA가 변경 감지를 하지 않음 -> 성능 향상
+    // 3. 실수로 변경하는 것을 막아줌
+    @Transactional(readOnly = true)
     public String detail(@PathVariable Long id, Model model) {
         Post post = postService.findById(id).get();
         model.addAttribute("post", post);
@@ -118,6 +123,4 @@ public class PostController {
         model.addAttribute("posts", posts);
         return "post/list";
     }
-
-
 }
