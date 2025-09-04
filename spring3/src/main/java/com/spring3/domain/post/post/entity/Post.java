@@ -21,7 +21,8 @@ public class Post extends BaseEntity {
     // CascadeType.REMOVE: Post가 삭제될 때 연관된 Comment들도 함께 삭제
     // fetch = FetchType.LAZY: Post를 조회할 때 연관된 Comment들을 즉시 로드하지 않고, 실제로 접근할 때 로드
     // mappedBy = "post": Comment 엔티티의 post 필드에 의해 매핑됨을 나타냄
-    @OneToMany(mappedBy = "post", cascade = {CascadeType.PERSIST, CascadeType.REMOVE}, fetch = FetchType.LAZY) // Comment.post 필드에 의해 매핑됨
+    // orphanRemoval
+    @OneToMany(mappedBy = "post", cascade = {CascadeType.PERSIST, CascadeType.REMOVE}, orphanRemoval=true, fetch = FetchType.LAZY) // Comment.post 필드에 의해 매핑됨
     // 비어 있는 값을 넣어 주지 않으면 NullPointerException이 발생할 수 있음
     private List<Comment> comments = new ArrayList<>();
 
