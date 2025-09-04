@@ -10,8 +10,6 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 
@@ -30,21 +28,14 @@ public class CommentController {
 
     @PostMapping("/posts/{postId}/comments/write")
     @Transactional
+    // 유효성 체크하는 건 꼭 필수로 넣어야 함
     public String write(
-            @PathVariable long postId,
-            @Valid CommentWriteForm form,
-            BindingResult bindingResult,
-            Model model
+            @PathVariable Long postId,
+            @Valid CommentWriteForm form
     ) {
         Post post = postService.findById(postId).get();
 
-        if(bindingResult.hasErrors()) {
-            model.addAttribute("post", post);
-            return "post/detail";
-        }
-
         postService.writeComment(post, form.getContent());
-
         // PostService의 save() 메서드를 호출하지 않아도, 트랜잭션이 커밋될 때 변경 감지(dirty checking)에 의해 자동으로 저장됨
         return "redirect:/posts/" + postId;
     }
