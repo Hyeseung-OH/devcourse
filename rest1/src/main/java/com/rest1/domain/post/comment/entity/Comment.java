@@ -1,5 +1,6 @@
 package com.rest1.domain.post.comment.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.rest1.domain.post.post.entity.Post;
 import com.rest1.global.jpa.entity.BaseEntity;
 import jakarta.persistence.Entity;
@@ -20,6 +21,7 @@ public class Comment extends BaseEntity {
     // Post 1개에 Comment 여러개가 달릴 수 있다.
     // FK는 Comment 테이블에 post_id로 생성된다.
     @ManyToOne
+    @JsonIgnore
     private Post post;
 
     public void update(String content) {
