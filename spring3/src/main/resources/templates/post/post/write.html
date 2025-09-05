@@ -1,0 +1,20 @@
+<html lang="ko" layout:decorate="~{layout}">
+<title th:text="|글 작성|"></title>
+<th:block layout:fragment="content">
+    <form method="POST" th:object="${form}">
+        <div>
+            <label for="">제목</label>
+            <div>
+                <input type="text" placeholder="제목을 입력해주세요." th:field="*{title}" autoFocus>
+            </div>
+        </div>
+        <div>
+            <label for="">내용</label>
+            <div>
+                <textarea placeholder="내용을 입력해주세요." th:field="*{content}"></textarea>
+            </div>
+        </div>
+        <input type="submit" value="작성">
+    </form>
+</th:block>
+</html>

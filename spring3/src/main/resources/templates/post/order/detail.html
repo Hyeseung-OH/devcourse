@@ -1,0 +1,14 @@
+<html lang="ko" layout:decorate="~{layout}">
+<title th:text="|주문 상세|"></title>
+<th:block layout:fragment="content">
+    주문 번호 ~~~~
+
+    상품명 ~~~
+
+    개수 ~~~
+
+    옵션 ~~~
+
+    <a method="DELETE" th:href="@{/orders/{orderId}(orderId=${order.id})}">주문 정보 삭제</a>
+</th:block>
+</html>
