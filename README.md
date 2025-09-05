@@ -21,9 +21,12 @@
   스프링 기초, 게시판 실습
 
 - **rest1**
-REST API 실습 기본
+  REST API 실습 기본
+  
 - **rest2**
-REST API TDD
+  REST API TDD
+  
 - **rest3**
-문서화
+  문서화
+
 
