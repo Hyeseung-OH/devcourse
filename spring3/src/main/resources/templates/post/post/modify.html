@@ -1,0 +1,27 @@
+<html lang="ko" layout:decorate="~{layout}">
+<head>
+    <title th:text="|글 수정|"></title>
+</head>
+<th:block layout:fragment="content">
+    <form method="POST" th:action="@{/posts/{postId}(postId=${post.id})}" th:object="${form}">
+
+        <input type="hidden" name="_method" value="PUT">
+        <h2>번호 :
+            <th:block th:text="${post.id}"></th:block>
+        </h2>
+        <div>
+            <label for="">제목</label>
+            <div>
+                <input type="text" placeholder="제목을 입력해주세요." th:field="*{title}" autoFocus>
+            </div>
+        </div>
+        <div>
+            <label for="">내용</label>
+            <div>
+                <textarea placeholder="내용을 입력해주세요." th:field="*{content}"></textarea>
+            </div>
+        </div>
+        <input type="submit" value="수정 완료">
+    </form>
+</th:block>
+</html>

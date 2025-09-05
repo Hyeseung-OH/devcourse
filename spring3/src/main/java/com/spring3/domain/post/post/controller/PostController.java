@@ -5,18 +5,13 @@ import com.spring3.domain.post.post.service.PostService;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.Setter;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.*;
 
+import java.io.Reader;
 import java.util.List;
 
 @Controller
@@ -28,29 +23,29 @@ public class PostController {
     }
 
 
-    @AllArgsConstructor
-    @Getter
-    public static class PostWriteForm {
-        @NotBlank(message = "01-title-제목을 입력해 주세요.")
-        @Size(min = 2, max = 10, message = "02-title-제목은 2글자 이상 10글자 이하로 입력해 주세요.")
-        private String title;
-
-        @NotBlank(message = "03-content-내용을 입력해 주세요.")
-        @Size(min = 2, max = 100, message = "04-content-내용은 2글자 이상 100글자 이하로 입력해 주세요.")
-        private String content;
-    }
+    record PostWriteForm(
+            @NotBlank(message = "01-title-제목을 입력해주세요.")
+            @Size(min = 2, max = 10, message = "02-title-제목은 2글자 이상 10글자 이하로 입력해주세요.")
+            String title,
+            @NotBlank(message = "03-content-내용을 입력해주세요.")
+            @Size(min = 2, max = 100, message = "04-content-내용은 2글자 이상 100글자 이하로 입력해주세요.")
+            String content
+    ) {}
 
     @GetMapping("/posts/write")
     public String write(@ModelAttribute("form") PostWriteForm form) {
-        return "post/write";
+        return "post/post/write";
     }
 
     @PostMapping("/posts/write")
     public String doWrite(
-            @ModelAttribute("form") @Valid PostWriteForm form, BindingResult bindingResult, Model model
+            @ModelAttribute("form")
+            @Valid PostWriteForm form,
+            BindingResult bindingResult,
+            Model model
     ) {
         if(bindingResult.hasErrors()) {
-            return "post/write";
+            return "post/post/write";
         }
 
         Post post = postService.write(form.title, form.content);
@@ -59,18 +54,14 @@ public class PostController {
     }
 
 
-    @AllArgsConstructor
-    @Getter
-    @Setter
-    public static class PostModifyForm {
-        @NotBlank(message = "01-title-제목을 입력해주세요.")
-        @Size(min = 2, max = 10, message = "02-title-제목은 2글자 이상 10글자 이하로 입력해주세요.")
-        private String title;
-
-        @NotBlank(message = "03-content-내용을 입력해주세요.")
-        @Size(min = 2, max = 100, message = "04-content-내용은 2글자 이상 100글자 이하로 입력해주세요.")
-        private String content;
-    }
+    record PostModifyForm(
+            @NotBlank(message = "01-title-제목을 입력해주세요.")
+            @Size(min = 2, max = 10, message = "02-title-제목은 2글자 이상 10글자 이하로 입력해주세요.")
+            String title,
+            @NotBlank(message = "03-content-내용을 입력해주세요.")
+            @Size(min = 2, max = 100, message = "04-content-내용은 2글자 이상 100글자 이하로 입력해주세요.")
+            String content
+    ) {}
 
     @GetMapping("/posts/{id}/modify")
     public String modify(
@@ -79,26 +70,39 @@ public class PostController {
             Model model
     ) {
         Post post = postService.findById(id).get();
-        form.setTitle(post.getTitle());
-        form.setContent(post.getContent());
+        PostModifyForm form2 = new PostModifyForm(post.getTitle(), post.getContent());
+        model.addAttribute("form", form2);
 
         model.addAttribute("post", post);
-        return "post/modify";
+        return "post/post/modify";
     }
 
-    @PostMapping("/posts/{id}/modify")
+
+    @DeleteMapping("/posts/{id}")
+    @Transactional
+    public String doDelete(@PathVariable long id) {
+        Post post = postService.findById(id).get();
+        postService.delete(post);
+
+        return "redirect:/posts";
+    }
+
+
+    @PutMapping("/posts/{id}")
     @Transactional
     public String doModify(
             @PathVariable Long id,
             @ModelAttribute("form") @Valid PostModifyForm form,
-            BindingResult bindingResult
+            BindingResult bindingResult,
+            Model model
     ) {
+        Post post = postService.findById(id).get();
+
         if(bindingResult.hasErrors()) {
-            return "post/modify";
+            model.addAttribute("post", post);
+            return "post/post/modify";
         }
 
-        // 아래 두 작업을 묶어서 트랜잭션 처리
-        Post post = postService.findById(id).get();
         postService.modify(post, form.title, form.content);
 
         return "redirect:/posts/%d".formatted(post.getId());
@@ -110,17 +114,17 @@ public class PostController {
     // 2. JPA가 변경 감지를 하지 않음 -> 성능 향상
     // 3. 실수로 변경하는 것을 막아줌
     @Transactional(readOnly = true)
-    public String detail(@PathVariable Long id, Model model) {
+    public String detail(@PathVariable Long id, Model model, Reader reader) {
         Post post = postService.findById(id).get();
         model.addAttribute("post", post);
 
-        return "post/detail";
+        return "post/post/detail";
     }
 
     @GetMapping("/posts")
     public String list(Model model) {
         List<Post> posts = postService.findAll();
         model.addAttribute("posts", posts);
-        return "post/list";
+        return "post/post/list";
     }
 }

@@ -38,7 +38,15 @@ public class PostService {
         post.addComment(content);
     }
 
-    public void delete(Post post, Long commentId) {
+    public void deleteComment(Post post, Long commentId) {
         post.deleteComment(commentId);
+    }
+
+    public void modifyComment(Post post, Long commentId, String content) {
+        post.updateComment(commentId, content);
+    }
+
+    public void delete(Post post) {
+        postRepository.delete(post);
     }
 }

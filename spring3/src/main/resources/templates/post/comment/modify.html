@@ -1,0 +1,43 @@
+<html lang="ko" layout:decorate="~{layout}">
+<title th:text="|댓글 수정|"></title>
+<th:block layout:fragment="content">
+
+    <h2>댓글 번호 : [[${comment.id}]]</h2>
+
+    <h4>작성일 : [[${comment.createDate}]]</h4>
+
+    <h4>수정일 : [[${comment.modifyDate}]]</h4>
+
+    <form th:action="@{/posts/{postId}/comments/{commentId}(postId=${post.id}, commentId=${comment.id})}" method="POST"
+          onsubmit="postComment__submitWriteForm(this); return false;">
+        <input type="hidden" name="_method" value="PUT">
+        <textarea rows="10" cols="100" name="content" placeholder="댓글 내용을 입력해주세요.">[[${comment.content}]]</textarea>
+        <div>
+            <input type="submit" value="등록">
+        </div>
+    </form>
+    <script>
+        function postComment__submitWriteForm(form) {
+            if (form.content.value.length == 0) {
+                alert("댓글 내용을 입력해주세요.");
+                form.content.focus();
+                return false;
+            }
+
+            if (form.content.value.length < 2) {
+                alert("댓글 내용은 2자 이상 입력해주세요.");
+                form.content.focus();
+                return false;
+            }
+
+            if (form.content.value.length > 100) {
+                alert("댓글 내용은 100자 미만으로 입력해주세요.");
+                form.content.focus();
+                return false;
+            }
+
+            form.submit();
+        }
+    </script>
+</th:block>
+</html>

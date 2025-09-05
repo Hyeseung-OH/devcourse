@@ -21,4 +21,8 @@ public class Comment extends BaseEntity {
     // FK는 Comment 테이블에 post_id로 생성된다.
     @ManyToOne
     private Post post;
+
+    public void update(String content) {
+        this.content = content;
+    }
 }
