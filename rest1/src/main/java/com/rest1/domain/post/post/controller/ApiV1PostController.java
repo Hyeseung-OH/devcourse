@@ -1,6 +1,6 @@
 package com.rest1.domain.post.post.controller;
 
-import com.rest1.domain.post.post.entity.Post;
+import com.rest1.domain.post.post.dto.PostDto;
 import com.rest1.domain.post.post.service.PostService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.transaction.annotation.Transactional;
@@ -14,12 +14,13 @@ import java.util.List;
 @RequiredArgsConstructor
 @RequestMapping("/api/v1/posts")
 public class ApiV1PostController {
-
     private final PostService postService;
 
     @GetMapping
     @Transactional(readOnly = true)
-    public List<Post> list() {
-        return postService.findAll();
+    public List<PostDto> list() {
+        return postService.findAll().stream()
+                .map(post -> new PostDto(post))
+                .toList();
     }
 }
