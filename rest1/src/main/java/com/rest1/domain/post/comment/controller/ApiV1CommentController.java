@@ -43,18 +43,20 @@ public class ApiV1CommentController {
 
     @GetMapping("/{postId}/comments/{commentId}/delete")
     @Transactional
-    public RsData deleteItem(
+    public RsData<Void> deleteItem(
             @PathVariable Long postId,
             @PathVariable Long commentId
     ) {
         Post post = postService.findById(postId).get();
         Comment comment = post.findCommentById(commentId).get();
+
         postService.deleteComment(post, commentId);
 
-        return new RsData(
+        RsData<Void> rsData = new RsData<>(
                 "204-1",
-                "%d번 댓글이 삭제되었습니다.".formatted(commentId),
-                new CommentDto(comment)
+                "%d번 댓글이 삭제되었습니다.".formatted(commentId)
         );
+
+        return rsData;
     }
 }
