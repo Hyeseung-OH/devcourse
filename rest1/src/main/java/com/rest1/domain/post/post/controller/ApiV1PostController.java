@@ -19,6 +19,7 @@ import java.util.List;
 public class ApiV1PostController {
     private final PostService postService;
 
+
     @GetMapping
     @Transactional(readOnly = true)
     public List<PostDto> list() {
@@ -26,6 +27,7 @@ public class ApiV1PostController {
                 .map(PostDto::new)
                 .toList();
     }
+
 
     @GetMapping("/{id}")
     @Transactional(readOnly = true)
@@ -36,6 +38,7 @@ public class ApiV1PostController {
         return new PostDto(post);
     }
 
+
     @DeleteMapping("/{id}")
     public RsData<Void> deleteItem(
             @PathVariable Long id
@@ -44,7 +47,7 @@ public class ApiV1PostController {
         postService.delete(post);
 
         return new RsData<Void>(
-                "204-1",
+                "200-1",
                 "%d번 게시물이 삭제되었습니다.".formatted(id)
         );
     }
@@ -54,6 +57,7 @@ public class ApiV1PostController {
             @NotBlank
             @Size(min = 2, max = 10)
             String title,
+
             @NotBlank
             @Size(min = 2, max = 100)
             String content
@@ -75,7 +79,7 @@ public class ApiV1PostController {
         System.out.println("createItem 메서드 실행");
 
         return new RsData<>(
-                "200-1",
+                "201-1",
                 "%d번 게시물이 생성되었습니다.".formatted(post.getId()),
                 new PostWriteResBody(
                         new PostDto(post),
