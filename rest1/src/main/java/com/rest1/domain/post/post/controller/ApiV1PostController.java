@@ -50,35 +50,64 @@ public class ApiV1PostController {
     }
 
 
-    record PostWriteBody(
+    record PostWriteReqBody(
             @NotBlank
             @Size(min = 2, max = 10)
             String title,
             @NotBlank
             @Size(min = 2, max = 100)
             String content
-    ) {}
+    ){}
 
-    record PostWritedResBody(
+    record PostWriteResBody(
             PostDto postDto,
             long totalCount
     ){}
 
     @PostMapping
     @Transactional
-    public RsData<PostWritedResBody> createItem(
-            @RequestBody @Valid PostWriteBody reqbody
+    public RsData<PostWriteResBody> createItem(
+            @RequestBody @Valid PostWriteReqBody reqBody
     ) {
-        Post post = postService.write(reqbody.title, reqbody.content);
+        Post post = postService.write(reqBody.title, reqBody.content);
         long totalCount = postService.count();
 
+        System.out.println("createItem 메서드 실행");
+
         return new RsData<>(
-                "201-1",
+                "200-1",
                 "%d번 게시물이 생성되었습니다.".formatted(post.getId()),
-                new PostWritedResBody(
+                new PostWriteResBody(
                         new PostDto(post),
                         totalCount
                 )
+        );
+    }
+
+
+    record PostModifyReqBody(
+            @NotBlank
+            @Size(min = 2, max = 10)
+            String title,
+
+            @NotBlank
+            @Size(min = 2, max = 100)
+            String content
+    ) {
+    }
+
+    @PutMapping("/{id}")
+    @Transactional
+    public RsData<Void> modifyItem(
+            @PathVariable Long id,
+            @RequestBody @Valid PostModifyReqBody reqBody
+    ) {
+        Post post = postService.findById(id).get();
+        postService.modify(post, reqBody.title, reqBody.content);
+
+        return new RsData(
+                "200-1",
+                "%d번 게시물이 수정되었습니다.".formatted(id)
         );
     }
 }
