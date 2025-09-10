@@ -22,8 +22,8 @@ public class ApiV1PostController {
 
     @GetMapping
     @Transactional(readOnly = true)
-    public List<PostDto> list() {
-        return postService.findAll().stream()
+    public List<PostDto> getItems() {
+        return postService.findAll().reversed().stream()
                 .map(PostDto::new)
                 .toList();
     }
@@ -64,8 +64,7 @@ public class ApiV1PostController {
     ){}
 
     record PostWriteResBody(
-            PostDto postDto,
-            long totalCount
+            PostDto postDto
     ){}
 
     @PostMapping
@@ -82,8 +81,7 @@ public class ApiV1PostController {
                 "201-1",
                 "%d번 게시물이 생성되었습니다.".formatted(post.getId()),
                 new PostWriteResBody(
-                        new PostDto(post),
-                        totalCount
+                        new PostDto(post)
                 )
         );
     }
