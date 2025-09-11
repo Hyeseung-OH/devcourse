@@ -23,8 +23,6 @@
 - **rest1**
   REST API 기초
 
-- **rest2**
-  REST API TDD
+- **js_project**
+  Next.js(FE) + Spring Boot(BE)
 
-- **rest3**
-  문서화
