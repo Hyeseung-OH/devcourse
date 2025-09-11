@@ -29,6 +29,9 @@ spring:
       filter:
         enabled: true
 
+springdoc:
+  default-produces-media-type: application/json
+
 logging:
   level:
     org.hibernate.orm.jdbc.bind: TRACE

@@ -5,6 +5,8 @@ import com.rest1.domain.post.comment.entity.Comment;
 import com.rest1.domain.post.post.entity.Post;
 import com.rest1.domain.post.post.service.PostService;
 import com.rest1.global.rsData.RsData;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
@@ -17,10 +19,12 @@ import java.util.List;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/v1/posts")
+@Tag(name = "ApiV1CommentController", description = "댓글 API")
 public class ApiV1CommentController {
     private final PostService postService;
 
-    @GetMapping("/{postId}/comments")
+    @GetMapping(value = "/{postId}/comments")
+    @Operation(summary = "다건 조회", description = "해당 글의 모든 댓글을 조회합니다.")
     public List<CommentDto> getItems(
             @PathVariable Long postId
     ) {
@@ -30,8 +34,9 @@ public class ApiV1CommentController {
                 .toList();
     }
 
-    @GetMapping("/{postId}/comments/{commentId}")
+    @GetMapping(value = "/{postId}/comments/{commentId}")
     @Transactional(readOnly = true)
+    @Operation(summary = "단건 조회")
     public CommentDto getItem(
             @PathVariable Long postId,
             @PathVariable Long commentId
@@ -45,6 +50,7 @@ public class ApiV1CommentController {
 
     @DeleteMapping("/{postId}/comments/{commentId}")
     @Transactional
+    @Operation(summary = "댓글 삭제")
     public RsData<Void> deleteItem(
             @PathVariable Long postId,
             @PathVariable Long commentId
@@ -72,6 +78,7 @@ public class ApiV1CommentController {
 
     @PostMapping("/{postId}/comments")
     @Transactional
+    @Operation(summary = "댓글 작성")
     public RsData<CommentWriteResBody> createItem(
             @PathVariable Long postId,
             @RequestBody @Valid CommentWriteReqBody reqBody
@@ -102,6 +109,7 @@ public class ApiV1CommentController {
 
     @PutMapping("/{postId}/comments/{commentId}")
     @Transactional
+    @Operation(summary = "댓글 수정")
     public RsData<Void> modifyItem(
             @PathVariable Long postId,
             @PathVariable Long commentId,
