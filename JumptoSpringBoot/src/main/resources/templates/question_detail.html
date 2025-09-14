@@ -28,8 +28,9 @@
     </div>
     <!-- 답변 반복 끝  -->
     <!-- 답변 작성 -->
-    <form th:action="@{|/answer/create/${question.id}|}" method="post" class="my-3">
-        <textarea name="content" id="content" rows="10" class="form-control"></textarea>
+    <form th:action="@{|/answer/create/${question.id}|}" th:object="${answerForm}" method="post" class="my-3">
+        <div th:replace="~{form_errors :: formErrorsFragment}"></div>
+        <textarea th:field="*{content}" rows="10" class="form-control"></textarea>
         <input type="submit" value="답변등록" class="btn btn-primary my-2">
     </form>
 </div>
@@ -40,4 +41,9 @@
 
  2. #list.size(객체)
  타임리프에서 제공하는 기능으로, 해당 객체의 길이를 반환
+
+ 3. th:object 속성을 추가해 AnswerForm을 타임리프에 연결
+
+ 4. #fields.hasAnyErros()와 #fields.allErrors()
+ 오류 메시지 출력
  -->
