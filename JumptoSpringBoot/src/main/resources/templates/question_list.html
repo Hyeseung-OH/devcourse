@@ -1,5 +1,6 @@
-<link rel="stylesheet" type="text/css" th:href="@{/bootstrap.min.css}">
-<div class="container my-3">
+<!-- layout.html 템플릿을 상속하기 위한 코드 -->
+<html layout:decorate="~{layout}">
+<div layout:fragment="content" class="container my-3">
     <table class="table">
         <thead class="table-dark">
         <tr>
@@ -19,6 +20,7 @@
         </tbody>
     </table>
 </div>
+</html>
 
 <!--
      1. th:each="question : ${questionList}
