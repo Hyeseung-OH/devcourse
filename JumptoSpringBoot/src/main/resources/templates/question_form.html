@@ -1,0 +1,36 @@
+<html layout:decorate="~{layout}">
+<div layout:fragment="content" class="container">
+    <h5 class="my-3 border-bottom pb-2">질문등록</h5>
+    <form th:action="@{/question/create}" th:object="${questionForm}" method="post">
+        <div th:replace="~{form_errors :: formErrorsFragment}"></div>
+        <div class="mb-3">
+            <label for="subject" class="form-label">제목</label>
+            <input type="text" th:field="*{subject}" class="form-control">
+        </div>
+        <div class="mb-3">
+            <label for="content" class="form-label">내용</label>
+            <textarea th:field="*{content}" class="form-control" rows="10"></textarea>
+        </div>
+        <input type="submit" value="저장하기" class="btn btn-primary my-2">
+    </form>
+</div>
+</html>
+
+<!--
+ 1. form method="post"
+ 타임리프의 a 태그는 기본적으로 get 요청인데, 게시글 작성을 위해서는 post 방식으로 데이터가 요청되어야 함
+
+ 2. th:if="${#fields.hasAnyErrors()}
+ #fields.allErrors()에는 오류 내용이 담겨 있음
+
+ 3. 템플릿의 form 태그에 th:object 속성을 추가했음 >> GetMapping 메서드의 매개 변수 수정 필요
+
+ 4. th:field="*{subject}" >> th:field="*{content}"
+ *{subject}는 QuestionForm 객체의 subject 필드를 의미함
+ 이렇게 하면 해당 태그의 id, name, value 속성이 모두 자동으로 생성되고,
+ 타임리프가 value 속성에 기존에 입력된 값을 채워 넣어 오류가 발생하더라도 기존에 입력한 값 유지 가능
+
+ 5. th:replace
+ th:replace 속성을 사용하면 템플릿 내에 공통 템플릿을 사용할 수 있음
+ <div th:replace="~{form_errors :: formErrorsFragment}"></div>는 th:replace 속성에 의해 div 요소의 내용을 form_errors 템플릿으로 대체하라는 의미
+ -->
