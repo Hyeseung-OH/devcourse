@@ -3,15 +3,11 @@ package com.jumptospringboot.sbb.question;
 import com.jumptospringboot.sbb.answer.AnswerForm;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-
-import java.util.List;
+import org.springframework.web.bind.annotation.*;
 
 // 프리픽스(prefix): URL의 접두사 또는 시작 부분을 가리키는 말 [필수 X]
 // QuestionController에 속하는 URL 매핑은 항상 /question 프리픽스로 시작하므로,
@@ -28,11 +24,13 @@ public class QuestionController {
     // 템플릿을 사용하기 때문에 @ResponseBody 어노테이션은 필요없음
     // 매개변수로 사용된 Model 객체는 자바 클래스와 템플릿 간의 연결 고리 역할 => Model 객체에 값을 담아 두면 템플릿에서 값을 사용할 수 있음
     // Model 객체는 따로 생성할 필요 없이, 컨트롤러의 메서드에 매개변수로 지정하기만 하면 스프링 부트가 자동으로 Model 객체 생성
-    public String list(Model model) {
+    // @RequestParam(value = "page", defaultValue = "0") -> 스프링 부트의 페이징 기능을 구현할 때 첫 페이지 번호는 0이므로 기본값으론 0을 설정
+    // GET 방식에서는 값을 전달하기 위해 ?와 &를 이용하는데, 첫 번째 파라미터는 ? 기호를 사용하고 그 이후 추가되는 값은 & 기호를 사용
+    public String list(Model model, @RequestParam(value = "page", defaultValue = "0") int page) {
         // Service를 이용해서 repository에 우회 접근 : 컨트롤러 -> 서비스 -> 리포지터리 순서로 접근
-        List<Question> questionsList = this.questionService.getList();
+        Page<Question> paging = this.questionService.getList(page);
         // Model 객체에 값 추가
-        model.addAttribute("questionList", questionsList);
+        model.addAttribute("paging", paging);
         return "question_list";
     }
 
