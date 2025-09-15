@@ -11,6 +11,10 @@
         </thead>
         <tbody>
         <tr th:each="question, loop : ${paging}">
+            <!-- 게시물 번호 공식
+            paging.getTotalElements: 전체 게시물 개수
+            -->
+            <td th:text="${paging.getTotalElements - (paging.number * paging.size) - loop.index}"></td>
             <td th:text="${loop.count}"></td>
             <td>
                 <a th:href="@{|/question/detail/${question.id}|}" th:text="${question.subject}"></a>
