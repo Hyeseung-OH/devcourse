@@ -2,6 +2,8 @@ package com.jumptospringboot.sbb;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -27,6 +29,15 @@ public class SecurityConfig {
                 .headers((headers) -> headers
                         .addHeaderWriter(new XFrameOptionsHeaderWriter(
                                 XFrameOptionsHeaderWriter.XFrameOptionsMode.SAMEORIGIN)))
+                // .formLogin 메서드: 스프링 시큐리티의 로그인 설정을 담당하는 부분
+                .formLogin((formLogin) -> formLogin
+                        .loginPage("/user/login") // 로그인 페이지의 URL
+                        .defaultSuccessUrl("/")) // 로그인 성공 시 이동할 페이지
+                // .logout 메서드: 스프링 시큐리티의 로그아웃 설정을 담당하는 부분
+                .logout((logout) -> logout
+                        .logoutUrl("/user/logout")  // AntPathRequestMatcher 대신 직접 URL 지정
+                        .logoutSuccessUrl("/")
+                        .invalidateHttpSession(true)) // 로그아웃 시 생성된 사용자 세션도 삭제
         ;
         return http.build();
     }
@@ -35,5 +46,12 @@ public class SecurityConfig {
     @Bean
     PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
+    }
+
+    @Bean
+    // 스프링 시큐리티의 인증을 처리함
+    // AuthenticationManager: 사용자 인증 시 UserSecurityService와 PasswordEncoder를 내부적으로 사용하여 인증과 권한 부여 프로세스 처리
+    AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) throws Exception {
+        return authenticationConfiguration.getAuthenticationManager();
     }
 }
