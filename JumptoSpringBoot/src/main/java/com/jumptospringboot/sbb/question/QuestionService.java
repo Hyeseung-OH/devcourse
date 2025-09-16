@@ -1,6 +1,7 @@
 package com.jumptospringboot.sbb.question;
 
 import com.jumptospringboot.sbb.DataNotFoundException;
+import com.jumptospringboot.sbb.user.SiteUser;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -52,11 +53,12 @@ public class QuestionService {
     }
 
     // 질문 데이터 저장
-    public void create(String subject, String content) {
+    public void create(String subject, String content, SiteUser user) {
         Question question = new Question();
         question.setSubject(subject);
         question.setContent(content);
         question.setCreateDate(LocalDateTime.now());
+        question.setAuthor(user);
         this.questionRepository.save(question);
     }
 }

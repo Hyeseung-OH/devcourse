@@ -4,6 +4,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -15,6 +16,7 @@ import org.springframework.security.web.header.writers.frameoptions.XFrameOption
 
 @Configuration // 이 파일이 스프링의 환경 설정임을 의미하는 어노테이션
 @EnableWebSecurity // 모든 요청 URL이 스프링 시큐리티의 제어를 받도록 만드는 어노테이션 -> 스프링 시큐리티 활성화
+@EnableMethodSecurity(prePostEnabled = true) // 메서드 단위로 보안 설정을 적용할 수 있도록 하는 어노테이션, @PreAuthorize 사용하려면 무조건 설정
 public class SecurityConfig {
     // 빈(bean)은 스프링에 의해 생성 또는 관리되는 객체를 의미
     // Bean 어노테이션을 통해 자바 코드 내에서 별도로 빈을 정의하고 등록 가능
