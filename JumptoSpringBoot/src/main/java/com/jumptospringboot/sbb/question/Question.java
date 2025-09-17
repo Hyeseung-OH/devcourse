@@ -34,4 +34,6 @@ public class Question {
     // 사용자 한 명이 질문 여러 개 작성할 수 있음
     @ManyToOne
     private SiteUser author;
+
+    private LocalDateTime modifyDate;
 }

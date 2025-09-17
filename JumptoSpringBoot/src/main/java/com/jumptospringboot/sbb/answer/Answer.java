@@ -26,6 +26,7 @@ public class Answer {
     private String content;
 
     private LocalDateTime createDate;
+    private LocalDateTime modifyDate;
 
     // 질문 엔티티와 연결된 속성이라는 것을 표시
     // ManyToOne: N:1 관계
