@@ -1,12 +1,15 @@
 package com.jumptospringboot.sbb.question;
 
 import com.jumptospringboot.sbb.DataNotFoundException;
+import com.jumptospringboot.sbb.answer.Answer;
 import com.jumptospringboot.sbb.user.SiteUser;
+import jakarta.persistence.criteria.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -30,14 +33,15 @@ public class QuestionService {
 //    }
 
     // 페이징
-    public Page<Question> getList(int page) {
+    public Page<Question> getList(int page, String kw) {
         // 최신순(역순)으로 데이터 조회
         // sort.add 메서드를 통해 정렬 조건 추가 가능
         // desc 내림차순, asc 오름차순
         List<Sort.Order> sorts = new ArrayList<>();
         sorts.add(Sort.Order.desc("createDate"));
         Pageable pageable = PageRequest.of(page, 10, Sort.by(sorts)); // PageRequest.of(page, 10) => page는 조회할 페이지의 번호, 10은 한 페이지에 보여 줄 게시물 개수
-        return this.questionRepository.findAll(pageable);
+        Specification<Question> spec = search(kw); // 검색어를 의미하는 매개변수 kw
+        return this.questionRepository.findAll(spec, pageable);
     }
 
     // 상세 페이지에 서비스 활용
@@ -60,5 +64,57 @@ public class QuestionService {
         question.setCreateDate(LocalDateTime.now());
         question.setAuthor(user);
         this.questionRepository.save(question);
+    }
+
+    // 질문 서비스 수정
+    public void modify(Question question, String subject, String content) {
+        question.setSubject(subject);
+        question.setContent(content);
+        question.setModifyDate(LocalDateTime.now());
+        this.questionRepository.save(question);
+    }
+
+    // 질문 삭제 가능
+    public void delete(Question question) {
+        this.questionRepository.delete(question);
+    }
+
+    // 추천 기능
+    public void vote(Question question, SiteUser siteUser) {
+        question.getVoter().add(siteUser);
+        this.questionRepository.save(question);
+    }
+
+    // 검색 기능 - 제목, 내용, 질문작성자, 답변내용, 답변작성자를 OR 조건으로 검색
+    private Specification<Question> search(String kw) {
+        return new Specification<>() {
+            private static final long serialVersionUID = 1L;
+
+            @Override
+            public Predicate toPredicate(Root<Question> questionRoot, CriteriaQuery<?> query, CriteriaBuilder cb) {
+                query.distinct(true); // 중복 결과 제거 (JOIN으로 인한 중복 방지)
+
+                // u1: Question 엔티티와 SiteUser(질문 작성자) 엔티티를 LEFT JOIN
+                // Question의 author 속성을 통해 연결
+                Join<Question, SiteUser> u1 = questionRoot.join("author", JoinType.LEFT);
+
+                // answerJoin: Question 엔티티와 Answer 엔티티를 LEFT JOIN
+                // Question의 answerList 속성을 통해 연결 (1:N 관계)
+                Join<Question, Answer> answerJoin = questionRoot.join("answerList", JoinType.LEFT);
+
+                // u2: Answer 엔티티와 SiteUser(답변 작성자) 엔티티를 LEFT JOIN
+                // Answer의 author 속성을 통해 연결
+                Join<Answer, SiteUser> u2 = answerJoin.join("author", JoinType.LEFT);
+
+                // OR 조건으로 여러 필드에서 키워드 검색 (하나라도 일치하면 결과에 포함)
+                return cb.or(
+                        cb.like(questionRoot.get("subject"), "%" + kw + "%"),    // 질문 제목에서 검색
+                        cb.like(questionRoot.get("content"), "%" + kw + "%"),    // 질문 내용에서 검색
+                        cb.like(u1.get("username"), "%" + kw + "%"),            // 질문 작성자명에서 검색
+                        cb.like(answerJoin.get("content"), "%" + kw + "%"),      // 답변 내용에서 검색
+                        cb.like(u2.get("username"), "%" + kw + "%")             // 답변 작성자명에서 검색
+                );
+            }
+        };
     }
 }

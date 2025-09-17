@@ -7,6 +7,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
+import java.util.Set;
 
 @Getter
 // 원래 entity에는 setter 안 씀
@@ -26,6 +27,7 @@ public class Answer {
     private String content;
 
     private LocalDateTime createDate;
+    private LocalDateTime modifyDate;
 
     // 질문 엔티티와 연결된 속성이라는 것을 표시
     // ManyToOne: N:1 관계
@@ -36,4 +38,7 @@ public class Answer {
     // 사용자 한 명이 댓글 여러 개 작성할 수 있음
     @ManyToOne
     private SiteUser author;
+
+    @ManyToMany
+    Set<SiteUser> voter;
 }

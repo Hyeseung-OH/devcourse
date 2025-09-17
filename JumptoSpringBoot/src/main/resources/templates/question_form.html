@@ -1,7 +1,11 @@
 <html layout:decorate="~{layout}">
 <div layout:fragment="content" class="container">
     <h5 class="my-3 border-bottom pb-2">질문등록</h5>
-    <form th:action="@{/question/create}" th:object="${questionForm}" method="post">
+    <!-- 수정 기능까지 같이 사용하려면 th:action 속성 삭제해야 함
+    th:action 삭제 시 CSRF 값이 자동으로 생성 X, hidden 형태로 input 요소를 작성하여 추가해야 함
+    스프링 시큐리티를 사용할 때 CSRF 값이 반드시 필요함 -->
+    <form th:object="${questionForm}" method="post">
+        <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
         <div th:replace="~{form_errors :: formErrorsFragment}"></div>
         <div class="mb-3">
             <label for="subject" class="form-label">제목</label>
