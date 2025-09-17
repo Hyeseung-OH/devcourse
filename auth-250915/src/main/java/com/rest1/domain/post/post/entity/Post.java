@@ -1,11 +1,10 @@
 package com.rest1.domain.post.post.entity;
 
+import com.rest1.global.exception.ServiceException;
+import com.rest1.domain.member.member.entity.Member;
 import com.rest1.domain.post.comment.entity.Comment;
 import com.rest1.global.jpa.entity.BaseEntity;
-import jakarta.persistence.CascadeType;
-import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.OneToMany;
+import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -19,11 +18,14 @@ import java.util.Optional;
 public class Post extends BaseEntity {
     private String title;
     private String content;
+    @ManyToOne(fetch = FetchType.LAZY)
+    private Member author;
 
     @OneToMany(mappedBy = "post", cascade = {CascadeType.PERSIST, CascadeType.REMOVE}, orphanRemoval=true, fetch = FetchType.LAZY)
     private List<Comment> comments = new ArrayList<>();
 
-    public Post(String title, String content) {
+    public Post(Member author, String title, String content) {
+        this.author = author;
         this.title = title;
         this.content = content;
     }
@@ -33,8 +35,8 @@ public class Post extends BaseEntity {
         this.content = content;
     }
 
-    public Comment addComment(String content) {
-        Comment comment = new Comment(content, this);
+    public Comment addComment(Member author, String content) {
+        Comment comment = new Comment(author, content, this);
         this.comments.add(comment);
 
         return comment;
@@ -55,5 +57,18 @@ public class Post extends BaseEntity {
         return comments.stream()
                 .filter(c -> c.getId().equals(commentId))
                 .findFirst();
+    }
+
+    public void checkActorModify(Member actor) {
+        if(!this.author.getId().equals(actor.getId())) {
+            throw new ServiceException("403-1", "수정 권한이 없습니다.");
+        }
+    }
+
+    public void checkActorDelete(Member actor) {
+        if(!this.author.getId().equals(actor.getId())) {
+            throw new ServiceException("403-2", "삭제 권한이 없습니다.");
+        }
+
     }
 }

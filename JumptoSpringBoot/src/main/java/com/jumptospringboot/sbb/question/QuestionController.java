@@ -1,13 +1,18 @@
 package com.jumptospringboot.sbb.question;
 
 import com.jumptospringboot.sbb.answer.AnswerForm;
+import com.jumptospringboot.sbb.user.SiteUser;
+import com.jumptospringboot.sbb.user.UserService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+
+import java.security.Principal;
 
 // 프리픽스(prefix): URL의 접두사 또는 시작 부분을 가리키는 말 [필수 X]
 // QuestionController에 속하는 URL 매핑은 항상 /question 프리픽스로 시작하므로,
@@ -19,6 +24,7 @@ import org.springframework.web.bind.annotation.*;
 public class QuestionController {
     // @RequiredArgsConstructor 어노테이션 사용 결과, 생성자가 자동으로 생성되어 객체가 자동으로 주입됨
     private final QuestionService questionService;
+    private final UserService userService;
 
     @GetMapping("/list")
     // 템플릿을 사용하기 때문에 @ResponseBody 어노테이션은 필요없음
@@ -47,6 +53,7 @@ public class QuestionController {
     // 생성은 원래 POST여야 하는데 Get으로 요청을 받은 이유 => 템플릿에서 질문 등록하기 버튼을 통한 요청이 GET 요청이므로
     // questionCreate 메서드는 question_form 템플릿을 출력함
     // 매개변수로 바인딩한 객체는 Model 객체로 전달하지 않아도 템플릿에서 사용할 수 있음
+    @PreAuthorize("isAuthenticated()")
     @GetMapping("/create")
     public String questionCreate(QuestionForm questionForm) {
         return "question_form";
@@ -57,15 +64,18 @@ public class QuestionController {
     // @Valid: QuestionForm에서 @NotEmpty, @Size 등으로 설정한 검증 기능이 동작하도록 하는 어노테이션
     // BindingResult: @Valid 어노테이션으로 검증이 수행된 결과를 의미하는 객체
     // RindingResult 객체는 무조건 @Valid 뒤에 위치해야 함, 위치가 뒤바뀌면 검증 실패 시 400 오류 발생
+    @PreAuthorize("isAuthenticated()") // 로그인한 경우에만 실행됨 => 로그아웃 상태라면 로그인 페이지로 강제 이동
     @PostMapping("/create")
     public String questionCreate(
             @Valid QuestionForm questionForm,
-            BindingResult bindingResult) {
+            BindingResult bindingResult,
+            Principal principal) {
         // @Valid 검증 과정이 false면 다시 입력하게 반환
         if (bindingResult.hasErrors()) {
             return "question_form";
         }
-        this.questionService.create(questionForm.getSubject(), questionForm.getContent());
+        SiteUser siteUser = this.userService.getUser(principal.getName());
+        this.questionService.create(questionForm.getSubject(), questionForm.getContent(), siteUser);
         return "redirect:/question/list"; // 질문 저장 후 질문 목록으로 이동
     }
 }

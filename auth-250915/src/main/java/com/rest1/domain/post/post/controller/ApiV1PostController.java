@@ -1,8 +1,12 @@
 package com.rest1.domain.post.post.controller;
 
+import com.rest1.domain.member.member.entity.Member;
+import com.rest1.domain.member.member.service.MemberService;
 import com.rest1.domain.post.post.dto.PostDto;
 import com.rest1.domain.post.post.entity.Post;
 import com.rest1.domain.post.post.service.PostService;
+import com.rest1.global.exception.ServiceException;
+import com.rest1.global.rq.Rq;
 import com.rest1.global.rsData.RsData;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -22,7 +26,8 @@ import java.util.List;
 public class ApiV1PostController {
 
     private final PostService postService;
-
+    private final MemberService memberService;
+    private final Rq rq;
 
     @GetMapping
     @Transactional(readOnly = true)
@@ -40,7 +45,6 @@ public class ApiV1PostController {
     public PostDto getItem(
             @PathVariable Long id
     ) {
-
         Post post = postService.findById(id).get();
         return new PostDto(post);
 
@@ -52,7 +56,11 @@ public class ApiV1PostController {
     public RsData<Void> deleteItem(
             @PathVariable Long id
     ) {
+        Member actor = rq.getActor();
         Post post = postService.findById(id).get();
+
+        // 권한 체크
+        post.checkActorDelete(actor);
         postService.delete(post);
 
         return new RsData<Void>(
@@ -84,8 +92,8 @@ public class ApiV1PostController {
     public RsData<PostWriteResBody> createItem(
             @RequestBody @Valid PostWriteReqBody reqBody
     ) {
-        Post post = postService.write(reqBody.title, reqBody.content);
-        long totalCount = postService.count();
+        Member actor = rq.getActor();
+        Post post = postService.write(actor, reqBody.title, reqBody.content);
 
         System.out.println("createItem 메서드 실행");
 
@@ -117,8 +125,10 @@ public class ApiV1PostController {
             @PathVariable Long id,
             @RequestBody @Valid PostModifyReqBody reqBody
     ) {
-
+        Member actor = rq.getActor();
         Post post = postService.findById(id).get();
+        post.checkActorModify(actor);
+        // 수정 로직
         postService.modify(post, reqBody.title, reqBody.content);
 
         return new RsData(
