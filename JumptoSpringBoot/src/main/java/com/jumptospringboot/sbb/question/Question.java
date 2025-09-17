@@ -1,6 +1,7 @@
 package com.jumptospringboot.sbb.question;
 
 import com.jumptospringboot.sbb.answer.Answer;
+import com.jumptospringboot.sbb.user.SiteUser;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -29,4 +30,8 @@ public class Question {
     // 질문 하나에 답변은 여러 개이므로 List<Answer>
     @OneToMany(mappedBy = "question", cascade = CascadeType.REMOVE)
     private List<Answer> answerList;
+
+    // 사용자 한 명이 질문 여러 개 작성할 수 있음
+    @ManyToOne
+    private SiteUser author;
 }

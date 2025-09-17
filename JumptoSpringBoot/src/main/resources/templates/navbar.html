@@ -8,7 +8,15 @@
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                 <li class="nav-item">
-                    <a class="nav-link" href="#">로그인</a>
+                    <!-- 로그인 상태가 아닐 때 -->
+                    <a class="nav-link" sec:authorize="isAnonymous()" th:href="@{/user/login}">로그인</a>
+
+                    <!-- 로그인 상태일 때 - POST 방식으로 변경해야 정상 작동, Get 요청 가급적 X -->
+                    <form sec:authorize="isAuthenticated()" th:action="@{/user/logout}" method="post" style="display: inline;">
+                        <button type="submit" class="nav-link" style="background: none; border: none; padding: 0; color: inherit; text-decoration: none; cursor: pointer;">
+                            로그아웃
+                        </button>
+                    </form>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" th:href="@{/user/signup}">회원가입</a>

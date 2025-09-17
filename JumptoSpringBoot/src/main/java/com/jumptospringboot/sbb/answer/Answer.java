@@ -1,6 +1,7 @@
 package com.jumptospringboot.sbb.answer;
 
 import com.jumptospringboot.sbb.question.Question;
+import com.jumptospringboot.sbb.user.SiteUser;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -31,4 +32,8 @@ public class Answer {
     // Answer(자식) 엔티티의 question 속성과 Question(부모) 엔티티가 서로 연결됨 => 외래키 생성
     @ManyToOne
     private Question question;
+
+    // 사용자 한 명이 댓글 여러 개 작성할 수 있음
+    @ManyToOne
+    private SiteUser author;
 }
