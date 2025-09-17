@@ -1,5 +1,6 @@
 package com.rest1.domain.post.comment.entity;
 
+import com.rest1.global.exception.ServiceException;
 import com.rest1.domain.member.member.entity.Member;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.rest1.domain.post.post.entity.Post;
@@ -31,8 +32,19 @@ public class Comment extends BaseEntity {
         this.post = post;
     }
 
-
     public void update(String content) {
         this.content = content;
+    }
+
+    public void checkActorModify(Member actor) {
+        if(!this.author.getId().equals(actor.getId())) {
+            throw new ServiceException("403-1", "댓글 수정 권한이 없습니다.");
+        }
+    }
+
+    public void checkActorDelete(Member actor) {
+        if(!this.author.getId().equals(actor.getId())) {
+            throw new ServiceException("403-2", "댓글 삭제 권한이 없습니다.");
+        }
     }
 }
