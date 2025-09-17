@@ -34,11 +34,13 @@ public class QuestionController {
     // Model 객체는 따로 생성할 필요 없이, 컨트롤러의 메서드에 매개변수로 지정하기만 하면 스프링 부트가 자동으로 Model 객체 생성
     // @RequestParam(value = "page", defaultValue = "0") -> 스프링 부트의 페이징 기능을 구현할 때 첫 페이지 번호는 0이므로 기본값으론 0을 설정
     // GET 방식에서는 값을 전달하기 위해 ?와 &를 이용하는데, 첫 번째 파라미터는 ? 기호를 사용하고 그 이후 추가되는 값은 & 기호를 사용
-    public String list(Model model, @RequestParam(value = "page", defaultValue = "0") int page) {
+    public String list(Model model, @RequestParam(value = "page", defaultValue = "0") int page,
+                       @RequestParam(value = "kw", defaultValue = "") String kw) {
         // Service를 이용해서 repository에 우회 접근 : 컨트롤러 -> 서비스 -> 리포지터리 순서로 접근
-        Page<Question> paging = this.questionService.getList(page);
+        Page<Question> paging = this.questionService.getList(page, kw);
         // Model 객체에 값 추가
         model.addAttribute("paging", paging);
+        model.addAttribute("kw", kw);
         return "question_list";
     }
 
