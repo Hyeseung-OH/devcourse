@@ -32,7 +32,8 @@
 - **auth-250915**
   ApiKey, Cookie, Jwt, Security
 
-- ** Payment **
+- **Payment**
   결제 API 연습 1
+
 
 
