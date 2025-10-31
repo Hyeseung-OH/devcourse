@@ -1,4 +1,5 @@
-package com.rest1.domain.standard.ut;
+package com.rest1.standard.ut;
+
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ClaimsBuilder;
 import io.jsonwebtoken.Jwts;
@@ -37,30 +38,21 @@ public class Ut {
         }
 
         public static boolean isValid(String jwt, String secretPattern) {
+
             SecretKey secretKey = Keys.hmacShaKeyFor(secretPattern.getBytes(StandardCharsets.UTF_8));
 
-            try{
+            try {
                 Jwts
                         .parser()
                         .verifyWith(secretKey)
                         .build()
                         .parse(jwt);
+
             } catch (Exception e) {
                 return false;
-            } finally {
-                return true;
             }
-        }
 
-        public static Map<String, Object> payload(String jwt, String secretPattern) {
-            SecretKey secretKey = Keys.hmacShaKeyFor(secretPattern.getBytes(StandardCharsets.UTF_8));
-
-            return  (Map<String, Object>) Jwts
-                    .parser()
-                    .verifyWith(secretKey)
-                    .build()
-                    .parse(jwt)
-                    .getPayload();
+            return true;
         }
 
         public static Map<String, Object> payloadOrNull(String jwt, String secretPattern) {
