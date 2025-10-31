@@ -1,6 +1,8 @@
 package com.jumptospringboot.sbb.question;
 
+import com.jumptospringboot.sbb.answer.Answer;
 import com.jumptospringboot.sbb.answer.AnswerForm;
+import com.jumptospringboot.sbb.answer.AnswerService;
 import com.jumptospringboot.sbb.user.SiteUser;
 import com.jumptospringboot.sbb.user.UserService;
 import jakarta.validation.Valid;
@@ -27,6 +29,7 @@ public class QuestionController {
     // @RequiredArgsConstructor 어노테이션 사용 결과, 생성자가 자동으로 생성되어 객체가 자동으로 주입됨
     private final QuestionService questionService;
     private final UserService userService;
+    private final AnswerService answerService; // 답변 서비스 추가
 
     @GetMapping("/list")
     // 템플릿을 사용하기 때문에 @ResponseBody 어노테이션은 필요없음
@@ -47,9 +50,18 @@ public class QuestionController {
     // 게시글 단건 조회
     @GetMapping(value = "/detail/{id}")
     // @PathVariable 어노테이션을 사용하면 URL 경로에 있는 값을 매개변수로 받을 수 있음
-    public String detail(Model model, @PathVariable("id") Integer id, AnswerForm answerForm) {
+    // 답변 페이징과 정렬을 위한 파라미터 추가
+    public String detail(Model model, @PathVariable("id") Integer id, AnswerForm answerForm,
+                         @RequestParam(value = "page", defaultValue = "0") int page,
+                         @RequestParam(value = "sort", defaultValue = "latest") String sort) {
         Question question = this.questionService.getQuestion(id);
         model.addAttribute("question", question);
+        
+        // 답변 페이징과 정렬 처리
+        Page<Answer> answerPaging = this.answerService.getAnswerList(question, page, sort);
+        model.addAttribute("answerPaging", answerPaging);
+        model.addAttribute("sort", sort);
+        
         return "question_detail";
     }
 
