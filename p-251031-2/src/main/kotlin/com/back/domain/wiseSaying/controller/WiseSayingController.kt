@@ -19,11 +19,28 @@ class WiseSayingController(
         println("${wiseSaying.id}번 명언이 등록되었습니다.")
     }
 
-    fun list()  {
+    fun list(rq: Rq)  {
+
+        val keywordType = rq.getParamValue("keywordType", "content")
+        val keyword = rq.getParamValue("keyword", "")
+
+        val wiseSayings = if (keyword.isNotBlank())
+            wiseSayingService.findByKeyword(keywordType, keyword)
+        else
+            wiseSayingService.findAll()
+
+
+        if (keyword.isNotBlank()) {
+            println("----------------------")
+            println("검색타입 : $keywordType")
+            println("검색어 : $keyword")
+            println("----------------------")
+        }
+
         println("번호 / 작가 / 명언")
         println("----------------------")
 
-        wiseSayingService.findAll().reversed().forEach {
+        wiseSayings.forEach {
             println("${it.id} / ${it.author} / ${it.content}")
         }
     }
@@ -72,5 +89,10 @@ class WiseSayingController(
 
         wiseSayingService.modify(wiseSaying, newContent, newAuthor)
         println("${id}번 명언이 수정되었습니다.")
+    }
+
+    fun build() {
+        wiseSayingService.build()
+        println("data.json 파일의 내용이 갱신되었습니다.")
     }
 }

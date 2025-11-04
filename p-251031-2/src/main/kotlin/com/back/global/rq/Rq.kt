@@ -36,4 +36,8 @@ class Rq(
             ?: defaultValue
     }
 
+    fun getParamValue(key: String, defaultValue: String): String {
+        return paramMap[key] ?: defaultValue
+    }
+
 }
