@@ -21,24 +21,24 @@ object TestRunner {
 
         // 표준 출력 리다이렉팅
         // 콘솔 출력 => 문자열 출력
-        val outputStream = ByteArrayOutputStream()
-        val printStream = PrintStream(outputStream)
+        return ByteArrayOutputStream().use { outputStream ->
+            PrintStream(outputStream).use { printStream ->
+                System.setOut(printStream)
+                App().run()
 
-        System.setOut(printStream)
+                // 표준 출력 결과를 문자열로 변환
+                val result = outputStream
+                    .toString()
+                    .trim()
+                    .replace(Regex("\\r\\n"), "\n") // 개행문자 차이 표준화
 
-        App().run()
+                // 다시 표준 입력으로 복구
+                System.setIn(originalIn)
+                // 다시 표준 출력으로 복구
+                System.setOut(originalOut)
 
-        // 표준 출력 결과를 문자열로 변환
-        val result = outputStream
-            .toString()
-            .trim()
-            .replace(Regex("\\r\\n"), "\n") // 개행문자 차이 표준화
-
-        // 다시 표준 입력으로 복구
-        System.setIn(originalIn)
-        // 다시 표준 출력으로 복구
-        System.setOut(originalOut)
-
-        return result
+                result
+            }
+        }
     }
 }
